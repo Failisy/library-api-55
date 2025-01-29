@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 관리 API 테스트</title>
+</head>
+<body>
+    <h1>?? 도서 관리 API 테스트</h1>
+
+    <!-- API URL 입력 -->
+    <label for="apiUrl">GAS API URL:</label>
+    <input type="text" id="apiUrl" value="https://script.google.com/macros/s/AKfycbw4W97nfZRzRwdAHGrbFsrBuCK4Kwa4SADREbwp0pO6dlxMNMSgu7ruLq-hT36F9f6V_g/exec" size="80">
+    
+    <hr>
+
+    <!-- 도서 검색 -->
+    <h2>?? 도서 검색</h2>
+    <input type="text" id="searchQuery" placeholder="검색어 입력">
+    <button onclick="searchBook()">검색</button>
+    <pre id="searchResult"></pre>
+
+    <hr>
+
+    <!-- 도서 대출 -->
+    <h2>?? 도서 대출</h2>
+    <input type="text" id="bookId" placeholder="도서 ID">
+    <input type="text" id="gunbun" placeholder="군번">
+    <input type="text" id="rank" placeholder="계급">
+    <input type="text" id="name" placeholder="이름">
+    <input type="text" id="unit" placeholder="부대">
+    <button onclick="borrowBook()">대출</button>
+    <pre id="borrowResult"></pre>
+
+    <hr>
+
+    <!-- 도서 반납 -->
+    <h2>?? 도서 반납</h2>
+    <input type="text" id="returnBookId" placeholder="도서 ID">
+    <input type="text" id="returnName" placeholder="이름">
+    <button onclick="returnBook()">반납</button>
+    <pre id="returnResult"></pre>
+
+    <script>
+        function searchBook() {
+            const apiUrl = document.getElementById("apiUrl").value;
+            const query = document.getElementById("searchQuery").value;
+            fetch(`${apiUrl}?action=search&query=${query}`)
+                .then(response => response.text())
+                .then(data => document.getElementById("searchResult").innerText = data)
+                .catch(error => console.error("검색 오류:", error));
+        }
+
+        function borrowBook() {
+            const apiUrl = document.getElementById("apiUrl").value;
+            const id = document.getElementById("bookId").value;
+            const gunbun = document.getElementById("gunbun").value;
+            const rank = document.getElementById("rank").value;
+            const name = document.getElementById("name").value;
+            const unit = document.getElementById("unit").value;
+
+            fetch(`${apiUrl}?action=borrow&id=${id}&gunbun=${gunbun}&rank=${rank}&name=${name}&unit=${unit}`)
+                .then(response => response.text())
+                .then(data => document.getElementById("borrowResult").innerText = data)
+                .catch(error => console.error("대출 오류:", error));
+        }
+
+        function returnBook() {
+            const apiUrl = document.getElementById("apiUrl").value;
+            const id = document.getElementById("returnBookId").value;
+            const name = document.getElementById("returnName").value;
+
+            fetch(`${apiUrl}?action=return&id=${id}&name=${name}`)
+                .then(response => response.text())
+                .then(data => document.getElementById("returnResult").innerText = data)
+                .catch(error => console.error("반납 오류:", error));
+        }
+    </script>
+</body>
+</html>
