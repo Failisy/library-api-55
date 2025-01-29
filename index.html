@@ -3,42 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>µµ¼­ °ü¸® API Å×½ºÆ®</title>
+    <title>ë„ì„œ ê´€ë¦¬ API í…ŒìŠ¤íŠ¸</title>
 </head>
 <body>
-    <h1>?? µµ¼­ °ü¸® API Å×½ºÆ®</h1>
+    <h1>?? ë„ì„œ ê´€ë¦¬ API í…ŒìŠ¤íŠ¸</h1>
 
-    <!-- API URL ÀÔ·Â -->
+    <!-- API URL ìž…ë ¥ -->
     <label for="apiUrl">GAS API URL:</label>
     <input type="text" id="apiUrl" value="https://script.google.com/macros/s/AKfycbw4W97nfZRzRwdAHGrbFsrBuCK4Kwa4SADREbwp0pO6dlxMNMSgu7ruLq-hT36F9f6V_g/exec" size="80">
     
     <hr>
 
-    <!-- µµ¼­ °Ë»ö -->
-    <h2>?? µµ¼­ °Ë»ö</h2>
-    <input type="text" id="searchQuery" placeholder="°Ë»ö¾î ÀÔ·Â">
-    <button onclick="searchBook()">°Ë»ö</button>
+    <!-- ë„ì„œ ê²€ìƒ‰ -->
+    <h2>?? ë„ì„œ ê²€ìƒ‰</h2>
+    <input type="text" id="searchQuery" placeholder="ê²€ìƒ‰ì–´ ìž…ë ¥">
+    <button onclick="searchBook()">ê²€ìƒ‰</button>
     <pre id="searchResult"></pre>
 
     <hr>
 
-    <!-- µµ¼­ ´ëÃâ -->
-    <h2>?? µµ¼­ ´ëÃâ</h2>
-    <input type="text" id="bookId" placeholder="µµ¼­ ID">
-    <input type="text" id="gunbun" placeholder="±º¹ø">
-    <input type="text" id="rank" placeholder="°è±Þ">
-    <input type="text" id="name" placeholder="ÀÌ¸§">
-    <input type="text" id="unit" placeholder="ºÎ´ë">
-    <button onclick="borrowBook()">´ëÃâ</button>
+    <!-- ë„ì„œ ëŒ€ì¶œ -->
+    <h2>?? ë„ì„œ ëŒ€ì¶œ</h2>
+    <input type="text" id="bookId" placeholder="ë„ì„œ ID">
+    <input type="text" id="gunbun" placeholder="êµ°ë²ˆ">
+    <input type="text" id="rank" placeholder="ê³„ê¸‰">
+    <input type="text" id="name" placeholder="ì´ë¦„">
+    <input type="text" id="unit" placeholder="ë¶€ëŒ€">
+    <button onclick="borrowBook()">ëŒ€ì¶œ</button>
     <pre id="borrowResult"></pre>
 
     <hr>
 
-    <!-- µµ¼­ ¹Ý³³ -->
-    <h2>?? µµ¼­ ¹Ý³³</h2>
-    <input type="text" id="returnBookId" placeholder="µµ¼­ ID">
-    <input type="text" id="returnName" placeholder="ÀÌ¸§">
-    <button onclick="returnBook()">¹Ý³³</button>
+    <!-- ë„ì„œ ë°˜ë‚© -->
+    <h2>?? ë„ì„œ ë°˜ë‚©</h2>
+    <input type="text" id="returnBookId" placeholder="ë„ì„œ ID">
+    <input type="text" id="returnName" placeholder="ì´ë¦„">
+    <button onclick="returnBook()">ë°˜ë‚©</button>
     <pre id="returnResult"></pre>
 
     <script>
@@ -48,7 +48,7 @@
             fetch(`${apiUrl}?action=search&query=${query}`)
                 .then(response => response.text())
                 .then(data => document.getElementById("searchResult").innerText = data)
-                .catch(error => console.error("°Ë»ö ¿À·ù:", error));
+                .catch(error => console.error("ê²€ìƒ‰ ì˜¤ë¥˜:", error));
         }
 
         function borrowBook() {
@@ -62,7 +62,7 @@
             fetch(`${apiUrl}?action=borrow&id=${id}&gunbun=${gunbun}&rank=${rank}&name=${name}&unit=${unit}`)
                 .then(response => response.text())
                 .then(data => document.getElementById("borrowResult").innerText = data)
-                .catch(error => console.error("´ëÃâ ¿À·ù:", error));
+                .catch(error => console.error("ëŒ€ì¶œ ì˜¤ë¥˜:", error));
         }
 
         function returnBook() {
@@ -73,7 +73,7 @@
             fetch(`${apiUrl}?action=return&id=${id}&name=${name}`)
                 .then(response => response.text())
                 .then(data => document.getElementById("returnResult").innerText = data)
-                .catch(error => console.error("¹Ý³³ ¿À·ù:", error));
+                .catch(error => console.error("ë°˜ë‚© ì˜¤ë¥˜:", error));
         }
     </script>
 </body>
