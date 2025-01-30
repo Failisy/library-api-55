@@ -37,7 +37,7 @@ function displayBooks(books) {
     });
 }
 
-// 검색 기능 추가
+// 검색 기능 추가 (여러 항목 검색)
 searchInput.addEventListener('input', () => {
     const query = searchInput.value.toLowerCase();
     fetch(apiUrl)
@@ -45,7 +45,11 @@ searchInput.addEventListener('input', () => {
         .then(books => {
             const filteredBooks = books.filter(book => 
                 book.title.toLowerCase().includes(query) || 
-                book.author.toLowerCase().includes(query)
+                book.author.toLowerCase().includes(query) ||
+                book.publisher.toLowerCase().includes(query) ||
+                book.isbn.toLowerCase().includes(query) ||
+                book.classification.toLowerCase().includes(query) ||
+                book.status.toLowerCase().includes(query)
             );
             displayBooks(filteredBooks);
         })
