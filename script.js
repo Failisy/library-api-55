@@ -1,9 +1,9 @@
-// ✅ 중복 선언 제거! (변수를 `let`이나 `const`로 다시 선언하지 않음)
 const sheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow"; // 🔥 스프레드시트 ID
 const apiKey = "AIzaSyA3_dlMzkw6N3fG2zl-Hwj__864TxzkNNE"; // 🔥 생성한 Google API 키
 
-// ✅ Google Sheets API URL 생성
-const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/도서목록?key=${apiKey}`;
+// ✅ 시트 이름을 URL 인코딩하여 API 요청
+const sheetName = encodeURIComponent("도서목록"); // 🔥 "도서목록"을 URL에 맞게 변환
+const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}`;
 
 function fetchBooks() {
     fetch(apiUrl)
