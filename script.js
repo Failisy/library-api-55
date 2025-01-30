@@ -1,5 +1,5 @@
 const apiUrl = 'https://army-library55.wofyf789.workers.dev/books'; // Cloudflare Worker API URL
-const bookListElement = document.getElementById('books');
+const bookTableBody = document.getElementById('books');
 const searchInput = document.getElementById('searchInput');
 
 async function fetchBooks() {
@@ -7,32 +7,33 @@ async function fetchBooks() {
         const response = await fetch(apiUrl);
         const books = await response.json();
         
-        // 책 데이터를 화면에 출력
+        // 책 데이터를 표 형식으로 출력
         displayBooks(books);
     } catch (error) {
         console.error('API 요청 실패:', error);
-        bookListElement.innerHTML = '<li>책 정보를 가져오는 데 실패했습니다.</li>';
+        bookTableBody.innerHTML = '<tr><td colspan="12">책 정보를 가져오는 데 실패했습니다.</td></tr>';
     }
 }
 
 function displayBooks(books) {
-    bookListElement.innerHTML = '';  // 기존 목록을 비우기
+    bookTableBody.innerHTML = '';  // 기존 목록을 비우기
     books.forEach(book => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <strong>제목:</strong> ${book.title}<br>
-            <strong>저자:</strong> ${book.author}<br>
-            <strong>출판사:</strong> ${book.publisher}<br>
-            <strong>ISBN:</strong> ${book.isbn}<br>
-            <strong>부가기호:</strong> ${book.additionalCode}<br>
-            <strong>가격:</strong> ${book.price}<br>
-            <strong>쪽수:</strong> ${book.pages}<br>
-            <strong>크기:</strong> ${book.size}<br>
-            <strong>출판일:</strong> ${book.pubDate}<br>
-            <strong>분류기호:</strong> ${book.classification}<br>
-            <strong>대출 가능 여부:</strong> ${book.status}
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${book.id}</td>  <!-- 고유 ID -->
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.publisher}</td>
+            <td>${book.isbn}</td>
+            <td>${book.additionalCode}</td>
+            <td>${book.price}</td>
+            <td>${book.pages}</td>
+            <td>${book.size}</td>
+            <td>${book.pubDate}</td>
+            <td>${book.classification}</td>
+            <td>${book.status}</td>
         `;
-        bookListElement.appendChild(li);
+        bookTableBody.appendChild(tr);
     });
 }
 
