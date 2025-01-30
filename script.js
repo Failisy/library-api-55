@@ -1,112 +1,77 @@
-// library_management.js
+const CLIENT_ID = "650457472463-1bg83e4nvs912fnv9u6dnbupb6glj1g9.apps.googleusercontent.com";  // Google OAuth 클라이언트 ID
+const API_KEY = "AIzaSyA3_dlMzkw6N3fG2zl-Hwj__864TxzkNNE";   // Google API 키
 
-const sheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow"; // 스프레드시트 ID
-const apiKey = "AIzaSyA3_dlMzkw6N3fG2zl-Hwj__864TxzkNNE"; // Google API 키
-const clientId = "650457472463-1bg83e4nvs912fnv9u6dnbupb6glj1g9.apps.googleusercontent.com"; // Google OAuth 클라이언트 ID
-const adminSheet = "admin"; // 관리자 목록 시트
-const sheetName = "books"; // 도서 목록 시트
-const loanSheet = "loan"; // 대출 기록 시트
+let bookData = [];  // 도서 목록 데이터를 저장할 배열
 
-const discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-const scopes = "https://www.googleapis.com/auth/spreadsheets";
+// Google OAuth 인증 초기화
+function initGoogleAuth() {
+    gapi.load("auth2", function() {
+        gapi.auth2.init({ client_id: CLIENT_ID });
+    });
+}
 
-let currentUserEmail = "";
-
-// ✅ Google 로그인 및 인증
+// Google 로그인
 function signIn() {
-    gapi.load("client:auth2", () => {
-        gapi.client.init({
-            apiKey: apiKey,
-            clientId: clientId,
-            discoveryDocs: discoveryDocs,
-            scope: scopes
-        }).then(() => {
-            gapi.auth2.getAuthInstance().signIn().then(user => {
-                currentUserEmail = user.getBasicProfile().getEmail();
-                document.getElementById("login-status").textContent = `✅ 로그인: ${currentUserEmail}`;
-                checkAdmin(currentUserEmail);
-            });
-        });
+    const auth2 = gapi.auth2.getAuthInstance();
+    auth2.signIn().then(function(googleUser) {
+        const profile = googleUser.getBasicProfile();
+        document.getElementById("login-status").innerText = `로그인한 사용자: ${profile.getEmail()}`;
+    }).catch(function(error) {
+        console.error("Login error:", error);
     });
 }
 
-// ✅ 로그아웃 기능
+// Google 로그아웃
 function signOut() {
-    gapi.auth2.getAuthInstance().signOut().then(() => {
-        document.getElementById("login-status").textContent = "로그인이 필요합니다.";
-        document.getElementById("admin-status").textContent = "";
-        document.getElementById("admin-panel").style.display = "none";
-        currentUserEmail = "";
+    const auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function() {
+        document.getElementById("login-status").innerText = "로그인이 필요합니다.";
     });
 }
 
-// ✅ 관리자 여부 확인
-async function checkAdmin(email) {
-    const adminApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${adminSheet}?key=${apiKey}`;
-    try {
-        const response = await fetch(adminApiUrl);
-        const data = await response.json();
-        if (data.values.some(row => row[0] === email)) {
-            document.getElementById("admin-status").textContent = "✅ 관리자 권한 있음";
-            enableAdminFeatures();
-        } else {
-            document.getElementById("admin-status").textContent = "❌ 관리자 권한 없음";
-        }
-    } catch (error) {
-        console.error("관리자 확인 오류:", error);
-    }
+// 도서 목록 가져오기
+function fetchBooks() {
+    const spreadsheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow";  // 스프레드시트 ID
+    const range = "books";  // 도서 목록이 있는 시트 이름
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${API_KEY}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            bookData = data.values.slice(1);  // 첫 번째 행(헤더)을 제외하고 데이터 저장
+            displayBooks(bookData);  // 도서 목록 화면에 표시
+        })
+        .catch(error => console.error('도서 목록을 가져오는 중 오류 발생:', error));
 }
 
-// ✅ 관리자 기능 활성화
-function enableAdminFeatures() {
-    document.getElementById("admin-panel").style.display = "block";
+// 도서 목록 화면에 표시
+function displayBooks(books) {
+    const bookListDiv = document.getElementById("book-list");
+    bookListDiv.innerHTML = "";  // 기존 목록을 지운 후 새로 추가
+
+    books.forEach(book => {
+        const bookElement = document.createElement("div");
+        bookElement.innerHTML = `
+            <h3>${book[1]}</h3> <!-- 책 제목 -->
+            <p>저자: ${book[2]}</p>
+            <p>출판사: ${book[3]}</p>
+            <p>ISBN: ${book[4]}</p>
+            <p>고유 ID: ${book[0]}</p> <!-- 고유 ID -->
+        `;
+        bookListDiv.appendChild(bookElement);
+    });
 }
 
-// ✅ 도서 검색 기능
+// 도서 검색
 function searchBooks() {
-    const searchText = document.getElementById("search-input").value.toLowerCase();
-    const filteredData = bookData.filter((row, index) => {
-        if (index === 0) return true;
-        return row.some(cell => cell.toLowerCase().includes(searchText));
+    const searchTerm = document.getElementById("search-input").value.toLowerCase();
+    const filteredBooks = bookData.filter(book => {
+        return book[1].toLowerCase().includes(searchTerm);
     });
-    renderTable(filteredData);
+    displayBooks(filteredBooks);
 }
 
-// ✅ 관리자 추가 기능
-async function addAdmin() {
-    if (!currentUserEmail) {
-        alert("먼저 로그인하세요!");
-        return;
-    }
-    const newAdminEmail = document.getElementById("new-admin-email").value;
-    if (!newAdminEmail) {
-        alert("추가할 관리자 이메일을 입력하세요.");
-        return;
-    }
-    const adminApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/admin:append?valueInputOption=RAW&key=${apiKey}`;
-    const adminData = { values: [[newAdminEmail]] };
-    try {
-        const response = await fetch(adminApiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(adminData)
-        });
-        if (response.ok) {
-            alert(`✅ ${newAdminEmail}님이 관리자로 추가되었습니다!`);
-        } else {
-            alert("❌ 관리자 추가 실패! 다시 시도하세요.");
-        }
-    } catch (error) {
-        console.error("관리자 추가 오류:", error);
-        alert("❌ 관리자 추가 중 오류 발생!");
-    }
-}
-
-// ✅ Google API 스크립트 로드
-function loadGapi() {
-    const script = document.createElement("script");
-    script.src = "https://apis.google.com/js/api.js";
-    script.onload = () => console.log("✅ Google API 로드 완료!");
-    document.body.appendChild(script);
-}
-loadGapi();
+// 초기 실행
+window.onload = function() {
+    initGoogleAuth();
+    fetchBooks();
+};
