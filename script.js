@@ -1,3 +1,4 @@
+// ✅ 중복 선언 제거! (변수를 `let`이나 `const`로 다시 선언하지 않음)
 const sheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow"; // 🔥 스프레드시트 ID
 const apiKey = "AIzaSyA3_dlMzkw6N3fG2zl-Hwj__864TxzkNNE"; // 🔥 생성한 Google API 키
 
@@ -60,9 +61,6 @@ function displayBooks(data) {
         bookListDiv.textContent = "📌 도서 목록이 없습니다.";
     }
 }
-
-// ✅ 페이지 로딩 시 데이터 가져오기
-fetchBooks();
 
 // ✅ 페이지 로딩 시 데이터 가져오기
 fetchBooks();
