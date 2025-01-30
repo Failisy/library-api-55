@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const bookListDiv = document.getElementById('book-list');
 
     // Google Apps Script 웹 앱 URL
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbz4AVoxyS9o_0QrpQCS0Fprda47MHQpGc4vBRsFR3qNqEih0zpdUbTICwtQIoNkDrAuHQ/exec';
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbxP-G3iRWJSFVVmSgRx1ekSSlC7rT4zo2oSQENeJ4hm6wCVw6_QnAXL1AQgDIWCed8fjw/exec';
 
     // 데이터 가져오기
     fetch(apiUrl)
