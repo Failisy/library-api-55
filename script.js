@@ -1,8 +1,8 @@
 // library_management.js
 
 const sheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow"; // 스프레드시트 ID
-const apiKey = "YOUR_API_KEY_HERE"; // Google API 키
-const clientId = "YOUR_CLIENT_ID_HERE"; // Google OAuth 클라이언트 ID
+const apiKey = "AIzaSyA3_dlMzkw6N3fG2zl-Hwj__864TxzkNNE"; // Google API 키
+const clientId = "650457472463-1bg83e4nvs912fnv9u6dnbupb6glj1g9.apps.googleusercontent.com"; // Google OAuth 클라이언트 ID
 const adminSheet = "admin"; // 관리자 목록 시트
 const sheetName = "books"; // 도서 목록 시트
 const loanSheet = "loan"; // 대출 기록 시트
