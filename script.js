@@ -1,173 +1,112 @@
+// library_management.js
+
 const sheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow"; // 스프레드시트 ID
-const apiKey = "AIzaSyA3_dlMzkw6N3fG2zl-Hwj__864TxzkNNE"; // Google API 키
-const sheetName = "books"; // ✅ 가져올 시트 이름
+const apiKey = "YOUR_API_KEY_HERE"; // Google API 키
+const clientId = "YOUR_CLIENT_ID_HERE"; // Google OAuth 클라이언트 ID
+const adminSheet = "admin"; // 관리자 목록 시트
+const sheetName = "books"; // 도서 목록 시트
+const loanSheet = "loan"; // 대출 기록 시트
 
-const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(sheetName)}?key=${apiKey}`;
+const discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+const scopes = "https://www.googleapis.com/auth/spreadsheets";
 
-let bookData = []; // 📌 전체 도서 데이터를 저장할 변수
+let currentUserEmail = "";
 
-// ✅ 도서 데이터 가져오기
-async function fetchBooks() {
+// ✅ Google 로그인 및 인증
+function signIn() {
+    gapi.load("client:auth2", () => {
+        gapi.client.init({
+            apiKey: apiKey,
+            clientId: clientId,
+            discoveryDocs: discoveryDocs,
+            scope: scopes
+        }).then(() => {
+            gapi.auth2.getAuthInstance().signIn().then(user => {
+                currentUserEmail = user.getBasicProfile().getEmail();
+                document.getElementById("login-status").textContent = `✅ 로그인: ${currentUserEmail}`;
+                checkAdmin(currentUserEmail);
+            });
+        });
+    });
+}
+
+// ✅ 로그아웃 기능
+function signOut() {
+    gapi.auth2.getAuthInstance().signOut().then(() => {
+        document.getElementById("login-status").textContent = "로그인이 필요합니다.";
+        document.getElementById("admin-status").textContent = "";
+        document.getElementById("admin-panel").style.display = "none";
+        currentUserEmail = "";
+    });
+}
+
+// ✅ 관리자 여부 확인
+async function checkAdmin(email) {
+    const adminApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${adminSheet}?key=${apiKey}`;
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(adminApiUrl);
         const data = await response.json();
-
-        console.log("📌 가져온 데이터:", data); // 데이터 확인
-
-        if (data.values) {
-            bookData = data.values;
-            renderTable(bookData); // 전체 목록 렌더링
+        if (data.values.some(row => row[0] === email)) {
+            document.getElementById("admin-status").textContent = "✅ 관리자 권한 있음";
+            enableAdminFeatures();
         } else {
-            showError("데이터를 불러올 수 없습니다.");
+            document.getElementById("admin-status").textContent = "❌ 관리자 권한 없음";
         }
     } catch (error) {
-        console.error("Google Sheets API 오류 발생:", error);
-        showError("데이터를 가져오는 중 오류가 발생했습니다.");
+        console.error("관리자 확인 오류:", error);
     }
 }
 
-// ✅ 테이블 생성 및 렌더링
-function renderTable(data) {
-    const bookListDiv = document.getElementById("book-list");
-    bookListDiv.innerHTML = "";
-
-    if (data.length <= 1) {
-        showError("📌 도서 목록이 없습니다.");
-        return;
-    }
-
-    const table = document.createElement("table");
-    const [headers, ...rows] = data;
-
-    // ✅ 검색 기능 추가: "대출" 버튼 포함
-    table.appendChild(createRow([...headers, "대출"], "th"));
-    rows.forEach(row => {
-        const tr = createRow(row, "td");
-
-        // 📌 "대출" 버튼 추가
-        const loanButton = document.createElement("button");
-        loanButton.textContent = "대출";
-        loanButton.onclick = () => loanBook(row);
-        const td = document.createElement("td");
-        td.appendChild(loanButton);
-        tr.appendChild(td);
-
-        table.appendChild(tr);
-    });
-
-    bookListDiv.appendChild(table);
+// ✅ 관리자 기능 활성화
+function enableAdminFeatures() {
+    document.getElementById("admin-panel").style.display = "block";
 }
 
-// ✅ 행 생성 함수
-function createRow(cells, cellType) {
-    const row = document.createElement("tr");
-    cells.forEach(cell => {
-        const cellElement = document.createElement(cellType);
-        cellElement.textContent = cell || "";
-        row.appendChild(cellElement);
-    });
-    return row;
-}
-
-// ✅ 검색 기능 (입력할 때마다 필터링)
+// ✅ 도서 검색 기능
 function searchBooks() {
     const searchText = document.getElementById("search-input").value.toLowerCase();
-
     const filteredData = bookData.filter((row, index) => {
-        if (index === 0) return true; // 헤더 유지
+        if (index === 0) return true;
         return row.some(cell => cell.toLowerCase().includes(searchText));
     });
-
     renderTable(filteredData);
 }
 
-// ✅ 오류 메시지 표시
-function showError(message) {
-    document.getElementById("book-list").textContent = message;
-}
-
-// ✅ 페이지 로딩 시 데이터 가져오기
-fetchBooks();
-
-// ✅ 도서 대출 기능 (Google Sheets API 사용)
-async function loanBook(book) {
-    // 🔹 대출자 정보 입력 받기
-    const unit = prompt("📌 부대를 입력하세요:");
-    if (!unit) return;
-    
-    const soldierId = prompt("📌 군번을 입력하세요:");
-    if (!soldierId) return;
-
-    const rank = prompt("📌 계급을 입력하세요:");
-    if (!rank) return;
-
-    const name = prompt("📌 이름을 입력하세요:");
-    if (!name) return;
-
-    const loanApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/loan:append?valueInputOption=RAW&key=${apiKey}`;
-    
-    // 🔹 Google Sheets에 추가할 데이터 구성 (고유 ID 포함)
-    const loanData = {
-        values: [[book[0], ...book.slice(1), unit, soldierId, rank, name, new Date().toLocaleDateString()]]
-    };
-
+// ✅ 관리자 추가 기능
+async function addAdmin() {
+    if (!currentUserEmail) {
+        alert("먼저 로그인하세요!");
+        return;
+    }
+    const newAdminEmail = document.getElementById("new-admin-email").value;
+    if (!newAdminEmail) {
+        alert("추가할 관리자 이메일을 입력하세요.");
+        return;
+    }
+    const adminApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/admin:append?valueInputOption=RAW&key=${apiKey}`;
+    const adminData = { values: [[newAdminEmail]] };
     try {
-        const response = await fetch(loanApiUrl, {
+        const response = await fetch(adminApiUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(loanData)
+            body: JSON.stringify(adminData)
         });
-
         if (response.ok) {
-            alert(`✅ ${name}님, 도서 대출 완료!`);
+            alert(`✅ ${newAdminEmail}님이 관리자로 추가되었습니다!`);
         } else {
-            alert("❌ 대출 실패! 다시 시도하세요.");
+            alert("❌ 관리자 추가 실패! 다시 시도하세요.");
         }
     } catch (error) {
-        console.error("대출 오류:", error);
-        alert("❌ 대출 중 오류 발생!");
+        console.error("관리자 추가 오류:", error);
+        alert("❌ 관리자 추가 중 오류 발생!");
     }
 }
 
-
-// ✅ 도서 반납 기능 (Google Sheets API 사용)
-async function returnBook(book) {
-    const soldierId = prompt("📌 군번을 입력하세요 (반납 확인):");
-    if (!soldierId) return;
-
-    const loanApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/loan?key=${apiKey}`;
-    
-    try {
-        const response = await fetch(loanApiUrl);
-        const data = await response.json();
-
-        if (!data.values) {
-            alert("❌ 대출 기록이 없습니다.");
-            return;
-        }
-
-        // 🔹 대출 기록에서 해당 "고유 ID + 군번"이 일치하는 도서 찾기
-        const updatedData = data.values.filter(row => !(row[0] === book[0] && row[6] === soldierId)); // 고유 ID + 군번 검증
-
-        if (updatedData.length === data.values.length) {
-            alert("❌ 해당 군번으로 대출된 기록이 없습니다.");
-            return;
-        }
-
-        // 🔹 기존 대출 기록 삭제 후 업데이트
-        const clearLoanUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/loan:clear?key=${apiKey}`;
-        await fetch(clearLoanUrl, { method: "POST" });
-
-        const updateLoanUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/loan?valueInputOption=RAW&key=${apiKey}`;
-        await fetch(updateLoanUrl, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ values: updatedData })
-        });
-
-        alert("✅ 도서 반납 완료!");
-    } catch (error) {
-        console.error("반납 오류:", error);
-        alert("❌ 반납 중 오류 발생!");
-    }
+// ✅ Google API 스크립트 로드
+function loadGapi() {
+    const script = document.createElement("script");
+    script.src = "https://apis.google.com/js/api.js";
+    script.onload = () => console.log("✅ Google API 로드 완료!");
+    document.body.appendChild(script);
 }
+loadGapi();
