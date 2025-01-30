@@ -17,9 +17,8 @@
     <!-- 도서 검색 -->
     <h2>?? 도서 검색</h2>
     <input type="text" id="searchQuery" placeholder="검색어 입력">
-    <button onclick="searchBook()">검색</button>
+    <button id="searchBtn">검색</button>
     <pre id="searchResult"></pre>
-
     <hr>
 
     <!-- 도서 대출 -->
@@ -42,15 +41,29 @@
     <pre id="returnResult"></pre>
 
     <script>
-        function searchBook() {
-            const apiUrl = document.getElementById("apiUrl").value;
-            const query = document.getElementById("searchQuery").value;
-            fetch(`${apiUrl}?action=search&query=${query}`)
-                .then(response => response.text())
-                .then(data => document.getElementById("searchResult").innerText = data)
-                .catch(error => console.error("검색 오류:", error));
+    document.getElementById("searchBtn").addEventListener("click", searchBook);
+
+    async function searchBook() {
+        const apiUrl = document.getElementById("apiUrl") ? document.getElementById("apiUrl").value : "YOUR_GAS_API_URL";
+        const query = document.getElementById("searchQuery") ? document.getElementById("searchQuery").value : "";
+
+        if (!query) {
+            alert("검색어를 입력하세요!");
+            return;
         }
 
+        try {
+            console.log(`🔍 요청 URL: ${apiUrl}?action=search&query=${query}`);
+            const response = await fetch(`${apiUrl}?action=search&query=${query}`);
+            const text = await response.text();
+            
+            console.log("✅ API 응답:", text);
+            document.getElementById("searchResult").innerText = text || "검색 결과 없음";
+        } catch (error) {
+            console.error("❌ 검색 오류:", error);
+            document.getElementById("searchResult").innerText = "오류 발생!";
+        }
+    }
         function borrowBook() {
             const apiUrl = document.getElementById("apiUrl").value;
             const id = document.getElementById("bookId").value;
