@@ -7,8 +7,19 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>도서 목록</h1>
+
+    <h1>📚 도서 관리 시스템</h1>
+
+    <!-- 🔹 도서 검색창 -->
+    <input type="text" id="search-input" placeholder="🔍 책 제목, 저자, ISBN 검색" oninput="searchBooks()">
+    
+    <!-- 🔹 도서 목록 -->
     <div id="book-list"></div>
+
+    <!-- 🔹 대출 목록 (대출한 도서 확인 및 반납) -->
+    <h2>📋 대출 목록</h2>
+    <div id="loan-list"></div>
+
     <script src="script.js"></script>
 </body>
 </html>
