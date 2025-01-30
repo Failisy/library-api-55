@@ -7,19 +7,32 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <h1>📚 도서 관리 시스템</h1>
-
+    
+    <!-- 🔹 Google 로그인 / 로그아웃 버튼 추가 -->
+    <button onclick="signIn()">Google 로그인</button>
+    <button onclick="signOut()">로그아웃</button>
+    <p id="login-status">로그인이 필요합니다.</p>
+    <p id="admin-status"></p>
+    
     <!-- 🔹 도서 검색창 -->
     <input type="text" id="search-input" placeholder="🔍 책 제목, 저자, ISBN 검색" oninput="searchBooks()">
     
     <!-- 🔹 도서 목록 -->
+    <h2>📖 도서 목록</h2>
     <div id="book-list"></div>
-
+    
     <!-- 🔹 대출 목록 (대출한 도서 확인 및 반납) -->
     <h2>📋 대출 목록</h2>
     <div id="loan-list"></div>
-
-    <script src="script.js"></script>
+    
+    <!-- 🔹 관리자 전용 기능 -->
+    <div id="admin-panel" style="display: none;">
+        <h2>🔧 관리자 패널</h2>
+        <input type="email" id="new-admin-email" placeholder="새 관리자 이메일">
+        <button onclick="addAdmin()">관리자 추가</button>
+    </div>
+    
+    <script src="library_management.js"></script>
 </body>
 </html>
