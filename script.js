@@ -2,7 +2,7 @@ const sheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow"; // 🔥 스프�
 const apiKey = "AIzaSyA3_dlMzkw6N3fG2zl-Hwj__864TxzkNNE"; // 🔥 생성한 Google API 키
 
 // ✅ 시트 이름을 URL 인코딩하여 API 요청
-const sheetName = encodeURIComponent("도서목록"); // 🔥 "도서목록"을 URL에 맞게 변환
+const sheetName = encodeURIComponent("도서 목록"); // 🔥 "도서목록"을 URL에 맞게 변환
 const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}`;
 
 function fetchBooks() {
