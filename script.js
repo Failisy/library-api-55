@@ -1,9 +1,6 @@
 const sheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow"; // 🔥 스프레드시트 ID
 const apiKey = "AIzaSyA3_dlMzkw6N3fG2zl-Hwj__864TxzkNNE"; // 🔥 생성한 Google API 키
 
-const sheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow"; // 🔥 스프레드시트 ID
-const apiKey = "YOUR_API_KEY_HERE"; // 🔥 생성한 Google API 키
-
 // ✅ Google Sheets API URL 생성
 const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/도서목록?key=${apiKey}`;
 
