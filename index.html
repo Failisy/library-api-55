@@ -6,23 +6,24 @@
     <title>도서 관리 API 테스트</title>
 </head>
 <body>
-    <h1>?? 도서 관리 API 테스트</h1>
+    <h1>📚 도서 관리 API 테스트</h1>
 
-    <!-- API URL 입력 -->
+    <!-- GAS API URL 자동 설정 -->
     <label for="apiUrl">GAS API URL:</label>
-    <input type="text" id="apiUrl" value="https://script.google.com/macros/s/AKfycbw4W97nfZRzRwdAHGrbFsrBuCK4Kwa4SADREbwp0pO6dlxMNMSgu7ruLq-hT36F9f6V_g/exec" size="80">
+    <input type="text" id="apiUrl" value="https://script.google.com/macros/s/AKfycby_OnqGJfUcxvpJDJkcjaAmFr2Ht9k6uNZ2CKw6YzuENaDJre-JUN2MlsOk3eZKqKOv3A/exec" size="80" readonly>
     
     <hr>
 
     <!-- 도서 검색 -->
-    <h2>?? 도서 검색</h2>
+    <h2>🔍 도서 검색</h2>
     <input type="text" id="searchQuery" placeholder="검색어 입력">
-    <button id="searchBtn">검색</button>
+    <button onclick="searchBook()">검색</button>
     <pre id="searchResult"></pre>
+
     <hr>
 
     <!-- 도서 대출 -->
-    <h2>?? 도서 대출</h2>
+    <h2>📖 도서 대출</h2>
     <input type="text" id="bookId" placeholder="도서 ID">
     <input type="text" id="gunbun" placeholder="군번">
     <input type="text" id="rank" placeholder="계급">
@@ -34,59 +35,105 @@
     <hr>
 
     <!-- 도서 반납 -->
-    <h2>?? 도서 반납</h2>
+    <h2>📕 도서 반납</h2>
     <input type="text" id="returnBookId" placeholder="도서 ID">
     <input type="text" id="returnName" placeholder="이름">
     <button onclick="returnBook()">반납</button>
     <pre id="returnResult"></pre>
 
     <script>
-    document.getElementById("searchBtn").addEventListener("click", searchBook);
+        // 📌 도서 검색
+        async function searchBook() {
+            const apiUrl = document.getElementById("apiUrl").value.trim();
+            const query = document.getElementById("searchQuery").value.trim();
 
-    async function searchBook() {
-        const apiUrl = document.getElementById("apiUrl") ? document.getElementById("apiUrl").value : "YOUR_GAS_API_URL";
-        const query = document.getElementById("searchQuery") ? document.getElementById("searchQuery").value : "";
+            if (!query) {
+                alert("검색어를 입력하세요!");
+                return;
+            }
 
-        if (!query) {
-            alert("검색어를 입력하세요!");
-            return;
+            try {
+                console.log(`🔍 요청 URL: ${apiUrl}?action=search&query=${query}`);
+
+                const response = await fetch(`${apiUrl}?action=search&query=${query}`, {
+                    method: "GET",
+                    mode: "cors",
+                    cache: "no-cache"
+                });
+
+                if (!response.ok) throw new Error(`HTTP 오류! 상태 코드: ${response.status}`);
+
+                const text = await response.text();
+                console.log("✅ API 응답:", text);
+
+                document.getElementById("searchResult").innerText = text || "검색 결과 없음";
+            } catch (error) {
+                console.error("❌ 검색 오류:", error);
+                document.getElementById("searchResult").innerText = "오류 발생! 개발자 도구(Console) 확인";
+            }
         }
 
-        try {
-            console.log(`🔍 요청 URL: ${apiUrl}?action=search&query=${query}`);
-            const response = await fetch(`${apiUrl}?action=search&query=${query}`);
-            const text = await response.text();
-            
-            console.log("✅ API 응답:", text);
-            document.getElementById("searchResult").innerText = text || "검색 결과 없음";
-        } catch (error) {
-            console.error("❌ 검색 오류:", error);
-            document.getElementById("searchResult").innerText = "오류 발생!";
+        // 📌 도서 대출
+        async function borrowBook() {
+            const apiUrl = document.getElementById("apiUrl").value.trim();
+            const id = document.getElementById("bookId").value.trim();
+            const gunbun = document.getElementById("gunbun").value.trim();
+            const rank = document.getElementById("rank").value.trim();
+            const name = document.getElementById("name").value.trim();
+            const unit = document.getElementById("unit").value.trim();
+
+            if (!id || !gunbun || !rank || !name || !unit) {
+                alert("모든 정보를 입력하세요!");
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}?action=borrow&id=${id}&gunbun=${gunbun}&rank=${rank}&name=${name}&unit=${unit}`, {
+                    method: "GET",
+                    mode: "cors",
+                    cache: "no-cache"
+                });
+
+                if (!response.ok) throw new Error(`HTTP 오류! 상태 코드: ${response.status}`);
+
+                const text = await response.text();
+                console.log("✅ 대출 응답:", text);
+
+                document.getElementById("borrowResult").innerText = text;
+            } catch (error) {
+                console.error("❌ 대출 오류:", error);
+                document.getElementById("borrowResult").innerText = "오류 발생!";
+            }
         }
-    }
-        function borrowBook() {
-            const apiUrl = document.getElementById("apiUrl").value;
-            const id = document.getElementById("bookId").value;
-            const gunbun = document.getElementById("gunbun").value;
-            const rank = document.getElementById("rank").value;
-            const name = document.getElementById("name").value;
-            const unit = document.getElementById("unit").value;
 
-            fetch(`${apiUrl}?action=borrow&id=${id}&gunbun=${gunbun}&rank=${rank}&name=${name}&unit=${unit}`)
-                .then(response => response.text())
-                .then(data => document.getElementById("borrowResult").innerText = data)
-                .catch(error => console.error("대출 오류:", error));
-        }
+        // 📌 도서 반납
+        async function returnBook() {
+            const apiUrl = document.getElementById("apiUrl").value.trim();
+            const id = document.getElementById("returnBookId").value.trim();
+            const name = document.getElementById("returnName").value.trim();
 
-        function returnBook() {
-            const apiUrl = document.getElementById("apiUrl").value;
-            const id = document.getElementById("returnBookId").value;
-            const name = document.getElementById("returnName").value;
+            if (!id || !name) {
+                alert("도서 ID와 이름을 입력하세요!");
+                return;
+            }
 
-            fetch(`${apiUrl}?action=return&id=${id}&name=${name}`)
-                .then(response => response.text())
-                .then(data => document.getElementById("returnResult").innerText = data)
-                .catch(error => console.error("반납 오류:", error));
+            try {
+                const response = await fetch(`${apiUrl}?action=return&id=${id}&name=${name}`, {
+                    method: "GET",
+                    mode: "cors",
+                    cache: "no-cache"
+                });
+
+                if (!response.ok) throw new Error(`HTTP 오류! 상태 코드: ${response.status}`);
+
+                const text = await response.text();
+                console.log("✅ 반납 응답:", text);
+
+                document.getElementById("returnResult").innerText = text;
+            } catch (error) {
+                console.error("❌ 반납 오류:", error);
+                document.getElementById("returnResult").innerText = "오류 발생!";
+            }
         }
     </script>
 </body>
