@@ -1,15 +1,15 @@
-const sheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow"; // 🔥 스프레드시트 ID
-const apiKey = "AIzaSyA3_dlMzkw6N3fG2zl-Hwj__864TxzkNNE"; // 🔥 생성한 Google API 키
+const sheetId = "1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow"; // 스프레드시트 ID
+const apiKey = "AIzaSyA3_dlMzkw6N3fG2zl-Hwj__864TxzkNNE"; // Google API 키
+const sheetName = "books"; // ✅ 변경된 시트 이름 반영
 
-// ✅ 시트 이름을 URL 인코딩하여 API 요청
-const sheetName = encodeURIComponent("도서 목록"); // 🔥 "도서목록"을 URL에 맞게 변환
-const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}`;
+// ✅ URL을 인코딩하여 API 요청
+const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(sheetName)}?key=${apiKey}`;
 
 function fetchBooks() {
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            console.log("📌 가져온 데이터:", data); // 콘솔에서 확인
+            console.log("📌 가져온 데이터:", data); // 콘솔에서 데이터 확인
             if (data.values) {
                 displayBooks(data.values);
             } else {
@@ -25,7 +25,7 @@ function fetchBooks() {
 function displayBooks(data) {
     const bookListDiv = document.getElementById("book-list");
 
-    // ✅ 기존 테이블이 있으면 삭제
+    // ✅ 기존 테이블 삭제
     bookListDiv.innerHTML = "";
 
     if (data.length > 1) {
