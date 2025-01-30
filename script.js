@@ -1,13 +1,13 @@
 function fetchBooks() {
-    const apiUrl = "https://script.google.com/macros/s/AKfycbz4AVoxyS9o_0QrpQCS0Fprda47MHQpGc4vBRsFR3qNqEih0zpdUbTICwtQIoNkDrAuHQ/exec";
+    const apiUrl = "https://script.google.com/macros/s/AKfycbyS1DhitfsJcFD_jXUWG38ax4Wb-0Q87DCo29piptardDZnjZIMCAsFJHhcKg8kUmOKUQ/execc";
     
-    // JSONP 방식으로 요청 (콜백 함수 추가)
+    // ✅ JSONP 방식 요청 (콜백 함수 추가)
     const script = document.createElement("script");
     script.src = apiUrl + "?callback=handleBookData";
     document.body.appendChild(script);
 }
 
-// 콜백 함수: 데이터를 받아서 화면에 표시
+// ✅ JSON 데이터를 받아서 화면에 표시
 function handleBookData(data) {
     const bookListDiv = document.getElementById("book-list");
 
@@ -45,5 +45,5 @@ function handleBookData(data) {
     }
 }
 
-// 페이지 로딩 시 데이터 가져오기
+// ✅ 페이지 로딩 시 데이터 가져오기
 fetchBooks();
