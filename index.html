@@ -15,8 +15,26 @@
     
     <section id="book-list">
         <h2>도서 목록</h2>
-        <!-- 가로 형식으로 도서 목록을 출력 -->
-        <div id="book-list-container"></div>
+        <!-- 표 형식으로 도서 목록을 출력 -->
+        <table id="book-table">
+            <thead>
+                <tr>
+                    <th>고유 ID</th>
+                    <th>제목</th>
+                    <th>저자</th>
+                    <th>출판사</th>
+                    <th>ISBN</th>
+                    <th>부가기호</th>
+                    <th>가격</th>
+                    <th>쪽수</th>
+                    <th>크기</th>
+                    <th>출판일</th>
+                    <th>분류기호</th>
+                    <th>대출 가능 여부</th>
+                </tr>
+            </thead>
+            <tbody id="book-table-body"></tbody>
+        </table>
     </section>
 
     <script src="script.js"></script>
