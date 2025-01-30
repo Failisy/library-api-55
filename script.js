@@ -1,4 +1,4 @@
-const apiUrl = 'https://army-library55.wofyf789.workers.dev/books'; // 새로운 API URL
+const apiUrl = 'https://army-library55.wofyf789.workers.dev/books'; // Cloudflare Worker API URL
 const bookListElement = document.getElementById('books');
 const searchInput = document.getElementById('searchInput');
 
@@ -23,7 +23,14 @@ function displayBooks(books) {
             <strong>제목:</strong> ${book.title}<br>
             <strong>저자:</strong> ${book.author}<br>
             <strong>출판사:</strong> ${book.publisher}<br>
-            <strong>ISBN:</strong> ${book.isbn}
+            <strong>ISBN:</strong> ${book.isbn}<br>
+            <strong>부가기호:</strong> ${book.additionalCode}<br>
+            <strong>가격:</strong> ${book.price}<br>
+            <strong>쪽수:</strong> ${book.pages}<br>
+            <strong>크기:</strong> ${book.size}<br>
+            <strong>출판일:</strong> ${book.pubDate}<br>
+            <strong>분류기호:</strong> ${book.classification}<br>
+            <strong>대출 가능 여부:</strong> ${book.status}
         `;
         bookListElement.appendChild(li);
     });
