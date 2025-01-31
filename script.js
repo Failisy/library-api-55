@@ -1,7 +1,18 @@
 const API_BASE = "https://library55.wofyf0211.workers.dev"; // Cloudflare API 주소
 
+document.addEventListener("DOMContentLoaded", function () {
+    fetchBooks();
+});
+
 // 📌 1. 도서 목록 불러오기 (검색 포함)
 async function fetchBooks() {
+    const searchElement = document.getElementById("search");
+    if (!searchElement) {
+        console.error("🚨 Error: 'search' 요소를 찾을 수 없습니다!");
+        return;
+    }
+
+    const searchQuery = searchElement.value;
     document.getElementById("loading").style.display = "block";
     document.getElementById("book-table").style.display = "none";
 
@@ -10,12 +21,11 @@ async function fetchBooks() {
         const data = await response.json();
         const books = data.values.slice(1);
 
-        const searchQuery = document.getElementById("search").value;
         const bookList = document.getElementById("book-list");
         bookList.innerHTML = "";
 
         books.forEach(book => {
-            if (!searchQuery || book[1].includes(searchQuery)) {
+            if (!searchQuery || book[1].toLowerCase().includes(searchQuery.toLowerCase())) {
                 bookList.innerHTML += `
                     <tr>
                         <td>${book[0]}</td>
@@ -48,6 +58,11 @@ async function addBook() {
     const author = document.getElementById("book-author").value;
     const publisher = document.getElementById("book-publisher").value;
 
+    if (!id || !title || !author || !publisher) {
+        alert("모든 필드를 입력하세요.");
+        return;
+    }
+
     const response = await fetch(`${API_BASE}/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -65,6 +80,8 @@ async function addBook() {
 // 📌 3. 도서 대출
 async function loanBook(id) {
     const borrower = prompt("대출자 이름 입력:");
+    if (!borrower) return;
+
     const date = new Date().toISOString().split("T")[0];
 
     const response = await fetch(`${API_BASE}/loan`, {
@@ -116,6 +133,3 @@ async function deleteBook(id) {
         alert("삭제 실패");
     }
 }
-
-// 페이지 로드 시 도서 목록 불러오기
-fetchBooks();
