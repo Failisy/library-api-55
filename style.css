@@ -4,6 +4,31 @@ body {
     margin: 20px;
 }
 
+.search-container, .form-container {
+    margin: 20px auto;
+}
+
+input {
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 5px 10px;
+    margin: 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
 table {
     width: 80%;
     margin: auto;
@@ -16,7 +41,9 @@ th, td {
     text-align: center;
 }
 
-input {
-    margin: 5px;
-    padding: 5px;
+#loading {
+    font-size: 18px;
+    color: #ff6600;
+    margin: 20px;
+    display: none;
 }
