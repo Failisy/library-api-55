@@ -1,41 +1,22 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 관리 시스템</title>
-    <link rel="stylesheet" href="style.css">
-</head>
 <body>
-    <h1>📚 도서 관리 시스템</h1>
+  <h1>📚 도서 관리 시스템</h1>
 
-    <div>
-        <input type="text" id="search" placeholder="도서 제목 검색">
-        <button onclick="fetchBooks()">검색</button>
-    </div>
+  <div id="loading" style="display: block;">
+    ⏳ 데이터를 불러오는 중입니다...
+  </div>
 
-    <h2>도서 목록</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>제목</th>
-                <th>저자</th>
-                <th>출판사</th>
-                <th>상태</th>
-                <th>관리</th>
-            </tr>
-        </thead>
-        <tbody id="book-list"></tbody>
-    </table>
+  <table id="book-table" style="display: none;">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>저자</th>
+        <th>출판사</th>
+        <th>상태</th>
+      </tr>
+    </thead>
+    <tbody id="book-list"></tbody>
+  </table>
 
-    <h2>도서 추가</h2>
-    <input type="text" id="book-id" placeholder="ID">
-    <input type="text" id="book-title" placeholder="제목">
-    <input type="text" id="book-author" placeholder="저자">
-    <input type="text" id="book-publisher" placeholder="출판사">
-    <button onclick="addBook()">추가</button>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
-</html>
