@@ -5,6 +5,25 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // 📌 1. 도서 목록 불러오기 (검색 포함, 렉 방지 최적화)
+async function fetchWithTimeout(url, timeout = 5000) {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const fetchTimeout = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const response = await fetch(url, { signal });
+        clearTimeout(fetchTimeout);
+        return response;
+    } catch (error) {
+        if (error.name === "AbortError") {
+            console.error("🚨 요청 시간이 초과되었습니다.");
+        } else {
+            console.error("🚨 네트워크 오류:", error);
+        }
+        throw error;
+    }
+}
+
 async function fetchBooks() {
     const searchElement = document.getElementById("search");
     if (!searchElement) {
@@ -22,18 +41,14 @@ async function fetchBooks() {
     bookList.innerHTML = ""; // 기존 리스트 초기화
 
     try {
-        // Cloudflare Workers의 캐싱된 데이터 가져오기
-        const response = await fetch(`${API_BASE}/books`, { cache: "force-cache" });
+        const response = await fetchWithTimeout(`${API_BASE}/books`, 5000);
         const data = await response.json();
         const books = data.values.slice(1); // 첫 번째 행(헤더) 제외
 
-        // HTML 렌더링 최적화 → `innerHTML` 대신 `appendChild()` 사용
         const fragment = document.createDocumentFragment();
-
         books.forEach(book => {
             if (!searchQuery || book[1].toLowerCase().includes(searchQuery)) {
                 const tr = document.createElement("tr");
-
                 tr.innerHTML = `
                     <td>${book[0]}</td>
                     <td>${book[1]}</td>
@@ -46,19 +61,18 @@ async function fetchBooks() {
                         <button onclick="deleteBook('${book[0]}')">삭제</button>
                     </td>
                 `;
-
                 fragment.appendChild(tr);
             }
         });
 
-        bookList.appendChild(fragment); // 최적화된 방식으로 한 번에 추가
+        bookList.appendChild(fragment);
         loadingElement.style.display = "none";
         bookTable.style.display = "block";
     } catch (error) {
-        console.error("🚨 데이터 로딩 실패:", error);
-        loadingElement.innerHTML = "❌ 데이터를 불러오는 데 실패했습니다!";
+        document.getElementById("loading").innerHTML = "❌ 데이터를 불러오는 데 실패했습니다!";
     }
 }
+
 
 // 📌 2. 도서 추가 (중복 추가 방지)
 async function addBook() {
