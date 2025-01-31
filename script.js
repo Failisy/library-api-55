@@ -25,8 +25,13 @@ async function fetchWithTimeout(url, timeout = 5000) {
 }
 
 async function fetchBooks() {
-    console.log("🔍 API 요청 시작: " + API_BASE + "/books"); // 요청 전 로그
+    const searchElement = document.getElementById("search");
+    if (!searchElement) {
+        console.error("🚨 Error: 'search' 요소를 찾을 수 없습니다!");
+        return;
+    }
 
+    const searchQuery = searchElement.value.trim().toLowerCase();
     const loadingElement = document.getElementById("loading");
     const bookTable = document.getElementById("book-table");
     const bookList = document.getElementById("book-list");
@@ -37,37 +42,30 @@ async function fetchBooks() {
 
     try {
         const response = await fetch(`${API_BASE}/books`, { cache: "force-cache" });
-        
-        console.log("✅ API 응답 수신 완료:", response.status);
-        if (!response.ok) throw new Error("API 응답 오류: " + response.status);
-        
         const data = await response.json();
-        console.log("📚 API 데이터:", data);
+        const books = data.values.slice(1); // 첫 번째 행(헤더) 제외
 
-        if (!data.values || data.values.length === 0) {
-            console.warn("⚠️ 데이터가 비어 있음");
-            loadingElement.innerHTML = "❌ 도서 데이터가 없습니다!";
-            return;
-        }
-
-        const books = data.values.slice(1);
         const fragment = document.createDocumentFragment();
-        
+
         books.forEach(book => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${book[0]}</td>
-                <td>${book[1]}</td>
-                <td>${book[2]}</td>
-                <td>${book[3]}</td>
-                <td>${book[4]}</td>
-                <td>
-                    <button onclick="loanBook('${book[0]}')">대출</button>
-                    <button onclick="returnBook('${book[0]}')">반납</button>
-                    <button onclick="deleteBook('${book[0]}')">삭제</button>
-                </td>
-            `;
-            fragment.appendChild(tr);
+            if (!searchQuery || book[2].toLowerCase().includes(searchQuery)) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${book[0]}</td>
+                    <td>${book[1]}</td>
+                    <td>${book[2]}</td>
+                    <td>${book[3]}</td>
+                    <td>${book[4]}</td>
+                    <td>${book[5]}</td>
+                    <td>${book[6]}</td>
+                    <td>${book[7]}</td>
+                    <td>${book[8]}</td>
+                    <td>${book[9]}</td>
+                    <td>${book[10]}</td>
+                    <td>${book[11]}</td>
+                `;
+                fragment.appendChild(tr);
+            }
         });
 
         bookList.appendChild(fragment);
@@ -79,6 +77,25 @@ async function fetchBooks() {
     }
 }
 
+// 📌 2. 테이블 정렬 기능 (클릭하면 오름차순/내림차순 변경)
+function sortTable(columnIndex) {
+    const table = document.getElementById("book-table");
+    const tbody = document.getElementById("book-list");
+    const rows = Array.from(tbody.getElementsByTagName("tr"));
+
+    const isAscending = table.getAttribute("data-sort-dir") === "asc";
+    table.setAttribute("data-sort-dir", isAscending ? "desc" : "asc");
+
+    rows.sort((rowA, rowB) => {
+        const cellA = rowA.getElementsByTagName("td")[columnIndex].textContent;
+        const cellB = rowB.getElementsByTagName("td")[columnIndex].textContent;
+
+        return isAscending ? cellA.localeCompare(cellB, "ko") : cellB.localeCompare(cellA, "ko");
+    });
+
+    tbody.innerHTML = "";
+    rows.forEach(row => tbody.appendChild(row));
+}
 
 // 📌 2. 도서 추가 (중복 추가 방지)
 async function addBook() {
