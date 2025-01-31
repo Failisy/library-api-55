@@ -25,13 +25,8 @@ async function fetchWithTimeout(url, timeout = 5000) {
 }
 
 async function fetchBooks() {
-    const searchElement = document.getElementById("search");
-    if (!searchElement) {
-        console.error("🚨 Error: 'search' 요소를 찾을 수 없습니다!");
-        return;
-    }
+    console.log("🔍 API 요청 시작: " + API_BASE + "/books"); // 요청 전 로그
 
-    const searchQuery = searchElement.value.trim().toLowerCase();
     const loadingElement = document.getElementById("loading");
     const bookTable = document.getElementById("book-table");
     const bookList = document.getElementById("book-list");
@@ -41,35 +36,46 @@ async function fetchBooks() {
     bookList.innerHTML = ""; // 기존 리스트 초기화
 
     try {
-        const response = await fetchWithTimeout(`${API_BASE}/books`, 5000);
+        const response = await fetch(`${API_BASE}/books`, { cache: "force-cache" });
+        
+        console.log("✅ API 응답 수신 완료:", response.status);
+        if (!response.ok) throw new Error("API 응답 오류: " + response.status);
+        
         const data = await response.json();
-        const books = data.values.slice(1); // 첫 번째 행(헤더) 제외
+        console.log("📚 API 데이터:", data);
 
+        if (!data.values || data.values.length === 0) {
+            console.warn("⚠️ 데이터가 비어 있음");
+            loadingElement.innerHTML = "❌ 도서 데이터가 없습니다!";
+            return;
+        }
+
+        const books = data.values.slice(1);
         const fragment = document.createDocumentFragment();
+        
         books.forEach(book => {
-            if (!searchQuery || book[1].toLowerCase().includes(searchQuery)) {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>${book[0]}</td>
-                    <td>${book[1]}</td>
-                    <td>${book[2]}</td>
-                    <td>${book[3]}</td>
-                    <td>${book[4]}</td>
-                    <td>
-                        <button onclick="loanBook('${book[0]}')">대출</button>
-                        <button onclick="returnBook('${book[0]}')">반납</button>
-                        <button onclick="deleteBook('${book[0]}')">삭제</button>
-                    </td>
-                `;
-                fragment.appendChild(tr);
-            }
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${book[0]}</td>
+                <td>${book[1]}</td>
+                <td>${book[2]}</td>
+                <td>${book[3]}</td>
+                <td>${book[4]}</td>
+                <td>
+                    <button onclick="loanBook('${book[0]}')">대출</button>
+                    <button onclick="returnBook('${book[0]}')">반납</button>
+                    <button onclick="deleteBook('${book[0]}')">삭제</button>
+                </td>
+            `;
+            fragment.appendChild(tr);
         });
 
         bookList.appendChild(fragment);
         loadingElement.style.display = "none";
         bookTable.style.display = "block";
     } catch (error) {
-        document.getElementById("loading").innerHTML = "❌ 데이터를 불러오는 데 실패했습니다!";
+        console.error("🚨 API 요청 실패:", error);
+        loadingElement.innerHTML = "❌ 데이터를 불러오는 데 실패했습니다!";
     }
 }
 
