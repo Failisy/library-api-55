@@ -1,32 +1,44 @@
-const API_BASE = "https://library55.wofyf0211.workers.dev"; // Cloudflare Workers API URL
+const API_BASE = "https://library55.wofyf0211.workers.dev"; // Cloudflare API 주소
 
-// 📌 1. 도서 목록 불러오기
+// 📌 1. 도서 목록 불러오기 (검색 포함)
 async function fetchBooks() {
-    const searchQuery = document.getElementById("search").value;
-    const response = await fetch(`${API_BASE}/books`);
-    const data = await response.json();
-    const books = data.values.slice(1); // 첫 번째 행(헤더) 제외
-    const bookList = document.getElementById("book-list");
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("book-table").style.display = "none";
 
-    bookList.innerHTML = "";
-    books.forEach(book => {
-        if (!searchQuery || book[1].includes(searchQuery)) {
-            bookList.innerHTML += `
-                <tr>
-                    <td>${book[0]}</td>
-                    <td>${book[1]}</td>
-                    <td>${book[2]}</td>
-                    <td>${book[3]}</td>
-                    <td>${book[4]}</td>
-                    <td>
-                        <button onclick="loanBook('${book[0]}')">대출</button>
-                        <button onclick="returnBook('${book[0]}')">반납</button>
-                        <button onclick="deleteBook('${book[0]}')">삭제</button>
-                    </td>
-                </tr>
-            `;
-        }
-    });
+    try {
+        const response = await fetch(`${API_BASE}/books`, { cache: "force-cache" });
+        const data = await response.json();
+        const books = data.values.slice(1);
+
+        const searchQuery = document.getElementById("search").value;
+        const bookList = document.getElementById("book-list");
+        bookList.innerHTML = "";
+
+        books.forEach(book => {
+            if (!searchQuery || book[1].includes(searchQuery)) {
+                bookList.innerHTML += `
+                    <tr>
+                        <td>${book[0]}</td>
+                        <td>${book[1]}</td>
+                        <td>${book[2]}</td>
+                        <td>${book[3]}</td>
+                        <td>${book[4]}</td>
+                        <td>
+                            <button onclick="loanBook('${book[0]}')">대출</button>
+                            <button onclick="returnBook('${book[0]}')">반납</button>
+                            <button onclick="deleteBook('${book[0]}')">삭제</button>
+                        </td>
+                    </tr>
+                `;
+            }
+        });
+
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("book-table").style.display = "block";
+    } catch (error) {
+        console.error("🚨 데이터 로딩 실패:", error);
+        document.getElementById("loading").innerHTML = "❌ 데이터를 불러오는 데 실패했습니다!";
+    }
 }
 
 // 📌 2. 도서 추가
