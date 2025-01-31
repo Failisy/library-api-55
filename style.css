@@ -1,55 +1,22 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    background-color: #333;
-    color: white;
     text-align: center;
-    padding: 20px;
-}
-
-input {
-    padding: 8px;
-    margin-top: 10px;
-    width: 80%;
-    max-width: 500px;
-    border: none;
-    border-radius: 5px;
-}
-
-#book-list {
     margin: 20px;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 table {
-    width: 100%;
+    width: 80%;
+    margin: auto;
     border-collapse: collapse;
-    margin-top: 20px;
 }
 
 th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
 }
 
-th {
-    background-color: #333;
-    color: white;
-    font-weight: bold;
-}
-
-tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-tbody tr:hover {
-    background-color: #e2e2e2;
+input {
+    margin: 5px;
+    padding: 5px;
 }
