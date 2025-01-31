@@ -19,12 +19,18 @@
     <table id="book-table" style="display: none;">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>제목</th>
-                <th>저자</th>
-                <th>출판사</th>
-                <th>상태</th>
-                <th>관리</th>
+                <th onclick="sortTable(0)">ID</th>
+                <th onclick="sortTable(1)">ISBN</th>
+                <th onclick="sortTable(2)">제목</th>
+                <th onclick="sortTable(3)">저자</th>
+                <th onclick="sortTable(4)">출판사</th>
+                <th onclick="sortTable(5)">부가기호</th>
+                <th onclick="sortTable(6)">가격</th>
+                <th onclick="sortTable(7)">쪽수</th>
+                <th onclick="sortTable(8)">크기</th>
+                <th onclick="sortTable(9)">출판일</th>
+                <th onclick="sortTable(10)">분류기호</th>
+                <th onclick="sortTable(11)">대출 가능 여부</th>
             </tr>
         </thead>
         <tbody id="book-list"></tbody>
