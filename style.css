@@ -4,7 +4,7 @@ body {
     margin: 20px;
 }
 
-.search-container, .form-container {
+.search-container {
     margin: 20px auto;
 }
 
@@ -30,7 +30,7 @@ button:hover {
 }
 
 table {
-    width: 80%;
+    width: 95%;
     margin: auto;
     border-collapse: collapse;
 }
@@ -39,6 +39,11 @@ th, td {
     border: 1px solid black;
     padding: 8px;
     text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+    cursor: pointer;
 }
 
 #loading {
