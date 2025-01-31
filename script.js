@@ -4,6 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchBooks();
 });
 
+// 📌 도서 목록 감추기/보이기 토글
+function toggleBookList() {
+    const bookTable = document.getElementById("book-table");
+    bookTable.style.display = (bookTable.style.display === "none" || bookTable.style.display === "") ? "table" : "none";
+}
+
 // 📌 1. 도서 목록 불러오기 (엑셀 형식 + 대출/반납/삭제 버튼 추가)
 async function fetchBooks() {
     const searchElement = document.getElementById("search");
