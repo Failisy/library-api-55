@@ -12,9 +12,7 @@ async function fetchBooks() {
         if (!response.ok) {
             throw new Error("서버 응답 오류");
         }
-        
         const books = await response.json();
-        console.log(books); // ✅ API 응답 데이터 확인
 
         tbody.innerHTML = "";
         books.forEach(book => {
@@ -32,4 +30,3 @@ async function fetchBooks() {
         console.error("❌ 도서 목록을 불러오는 중 오류 발생:", error);
     }
 }
-
