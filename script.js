@@ -2,7 +2,10 @@ const apiBase = "https://army-library55.wofyf789.workers.dev/";
 
 document.getElementById("login-form").addEventListener("submit", async function(event) {
     event.preventDefault();
-    alert("로그인 기능은 곧 추가됩니다!");
+
+    // 로그인 성공 처리 (단순한 예제)
+    document.getElementById("login").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
 });
 
 async function fetchBooks() {
@@ -27,4 +30,5 @@ async function fetchBooks() {
         console.error("도서 목록을 불러오는 중 오류 발생:", error);
     }
 }
+
 fetchBooks();
