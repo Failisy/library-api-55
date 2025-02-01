@@ -3,48 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 도서 관리 시스템</title>
-    <link rel="stylesheet" href="style.css">
+    <title>도서 목록</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-    <h1>📚 도서 관리 시스템</h1>
-
-    <div class="search-container">
-        <input type="text" id="search" placeholder="도서 제목 검색">
-        <button onclick="fetchBooks()">검색</button>
-    </div>
-
-    <div id="loading">⏳ 데이터를 불러오는 중...</div>
-
-    <table id="book-table" style="display: none;">
+    <h1>도서 목록</h1>
+    <input type="text" id="search" placeholder="검색어 입력 (제목, 저자, 출판사 등)">
+    <button onclick="fetchBooks()">검색</button>
+    <table>
         <thead>
             <tr>
-                <th onclick="sortTable(0)">ID</th>
-                <th onclick="sortTable(1)">ISBN</th>
-                <th onclick="sortTable(2)">제목</th>
-                <th onclick="sortTable(3)">저자</th>
-                <th onclick="sortTable(4)">출판사</th>
-                <th onclick="sortTable(5)">부가기호</th>
-                <th onclick="sortTable(6)">가격</th>
-                <th onclick="sortTable(7)">쪽수</th>
-                <th onclick="sortTable(8)">크기</th>
-                <th onclick="sortTable(9)">출판일</th>
-                <th onclick="sortTable(10)">분류기호</th>
-                <th onclick="sortTable(11)">대출 가능 여부</th>
+                <th>ID</th>
+                <th>ISBN</th>
+                <th>책 제목</th>
+                <th>저자</th>
+                <th>출판사</th>
+                <th>대출 가능 여부</th>
             </tr>
         </thead>
         <tbody id="book-list"></tbody>
     </table>
-
-    <h2>도서 추가</h2>
-    <div class="form-container">
-        <input type="text" id="book-id" placeholder="ID">
-        <input type="text" id="book-title" placeholder="제목">
-        <input type="text" id="book-author" placeholder="저자">
-        <input type="text" id="book-publisher" placeholder="출판사">
-        <button onclick="addBook()">추가</button>
-    </div>
-
-    <script src="script.js"></script>
+    
+    <script>
+        async function fetchBooks() {
+            const response = await fetch('https://army-library55.wofyf789.workers.dev/books');
+            const books = await response.json();
+            const searchQuery = document.getElementById('search').value.toLowerCase();
+            
+            const filteredBooks = books.filter(book =>
+                book['책 제목'].toLowerCase().includes(searchQuery) ||
+                book['저자'].toLowerCase().includes(searchQuery) ||
+                book['출판사'].toLowerCase().includes(searchQuery)
+            );
+            
+            const tableBody = document.getElementById('book-list');
+            tableBody.innerHTML = '';
+            
+            filteredBooks.forEach(book => {
+                const row = `<tr>
+                    <td>${book.ID}</td>
+                    <td>${book.ISBN}</td>
+                    <td>${book['책 제목']}</td>
+                    <td>${book.저자}</td>
+                    <td>${book.출판사}</td>
+                    <td>${book['대출 가능 여부']}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+        
+        // 페이지 로드 시 도서 목록 불러오기
+        fetchBooks();
+    </script>
 </body>
 </html>
