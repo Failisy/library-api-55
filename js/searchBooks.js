@@ -18,11 +18,17 @@ async function searchBooks(query) {
         books.forEach(book => {
             const row = `<tr>
                 <td>${book.ID}</td>
-                <td>${book.제목}</td>
-                <td>${book.저자}</td>
-                <td>${book.출판사}</td>
                 <td>${book.ISBN}</td>
-                <td>${book.대출_가능_여부}</td>
+                <td>${book.TITLE}</td>
+                <td>${book.AUTHOR}</td>
+                <td>${book.PUBLISHER}</td>
+                <td>${book.ADD_CODE}</td>
+                <td>${book.PRE_PRICE}</td>
+                <td>${book.PAGE}</td>
+                <td>${book.SIZE}</td>
+                <td>${book.PUBLISH_DATE}</td>
+                <td>${book.SUBJECT}</td>
+                <td>${book.LOAN}</td>
             </tr>`;
             tbody.innerHTML += row;
         });
