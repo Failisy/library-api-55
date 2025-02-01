@@ -1,19 +1,23 @@
 const apiBase = "https://army-library55.wofyf789.workers.dev/";
 
-document.getElementById("login-form").addEventListener("submit", async function(event) {
-    event.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
+    fetchBooks();
+});
 
-    // 로그인 성공 처리 (단순한 예제)
-    document.getElementById("login").style.display = "none";
-    document.getElementById("main-content").style.display = "block";
+document.getElementById("login-form")?.addEventListener("submit", function(event) {
+    event.preventDefault();
+    window.location.href = "home.html";
 });
 
 async function fetchBooks() {
     try {
         const response = await fetch(apiBase + "books");
+        if (!response.ok) {
+            throw new Error("서버 응답 오류");
+        }
         const books = await response.json();
         
-        const tbody = document.querySelector("#book-table tbody");
+        const tbody = document.getElementById("book-list");
         tbody.innerHTML = "";
         books.forEach(book => {
             const row = `<tr>
@@ -30,5 +34,3 @@ async function fetchBooks() {
         console.error("도서 목록을 불러오는 중 오류 발생:", error);
     }
 }
-
-fetchBooks();
