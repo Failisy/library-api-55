@@ -62,9 +62,9 @@
                 }
                 
                 const filteredBooks = data.books.filter(book =>
-                    book['책 제목'].toLowerCase().includes(searchQuery) ||
-                    book['저자'].toLowerCase().includes(searchQuery) ||
-                    book['출판사'].toLowerCase().includes(searchQuery)
+                    (book['책 제목'] && book['책 제목'].toLowerCase().includes(searchQuery)) ||
+                    (book['저자'] && book['저자'].toLowerCase().includes(searchQuery)) ||
+                    (book['출판사'] && book['출판사'].toLowerCase().includes(searchQuery))
                 );
                 
                 const tableBody = document.getElementById('book-list');
@@ -72,12 +72,12 @@
                 
                 filteredBooks.forEach(book => {
                     const row = `<tr>
-                        <td>${book.ID}</td>
-                        <td>${book.ISBN}</td>
-                        <td>${book['책 제목']}</td>
-                        <td>${book.저자}</td>
-                        <td>${book.출판사}</td>
-                        <td>${book['대출가능']}</td>
+                        <td>${book.ID || ''}</td>
+                        <td>${book.ISBN || ''}</td>
+                        <td>${book['책 제목'] || ''}</td>
+                        <td>${book.저자 || ''}</td>
+                        <td>${book.출판사 || ''}</td>
+                        <td>${book['대출가능'] || ''}</td>
                     </tr>`;
                     tableBody.innerHTML += row;
                 });
