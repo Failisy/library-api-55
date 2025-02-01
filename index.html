@@ -125,14 +125,14 @@
                 }
                 const data = await response.json();
                 booksData = data.books;
-                filteredBooks = booksData; // 전체 데이터로 초기화
-                displayBooks(filteredBooks.length, 1);
+                filteredBooks = [...booksData]; // 전체 데이터 저장
+                displayBooks(1);
             } catch (error) {
                 console.error("도서 데이터를 불러오는 중 오류 발생:", error);
             }
         }
 
-        function displayBooks(totalBooks, page) {
+        function displayBooks(page) {
             const tbody = document.querySelector('#booksTable tbody');
             tbody.innerHTML = '';
             const start = (page - 1) * rowsPerPage;
@@ -156,7 +156,6 @@
                 `;
                 tbody.appendChild(row);
             });
-            
             document.getElementById('pageInfo').textContent = `페이지 ${page} / ${Math.ceil(filteredBooks.length / rowsPerPage)}`;
         }
 
@@ -168,20 +167,20 @@
                 )
             );
             currentPage = 1;
-            displayBooks(filteredBooks.length, 1);
+            displayBooks(1);
         }
 
         document.getElementById('prevPage').addEventListener('click', () => {
             if (currentPage > 1) {
                 currentPage--;
-                displayBooks(filteredBooks.length, currentPage);
+                displayBooks(currentPage);
             }
         });
 
         document.getElementById('nextPage').addEventListener('click', () => {
             if (currentPage < Math.ceil(filteredBooks.length / rowsPerPage)) {
                 currentPage++;
-                displayBooks(filteredBooks.length, currentPage);
+                displayBooks(currentPage);
             }
         });
 
