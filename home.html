@@ -6,7 +6,7 @@
         if (header && content) {
             const [headerHTML, contentHTML] = await Promise.all([
                 fetch("/library-api-55/partials/header.html").then(res => res.text()),
-                fetch("/library-api-55/partials/content.html").then(res => res.text())
+                fetch("/library-api-55/partials/home_content.html").then(res => res.text()) // ✅ 올바른 파일명
             ]);
             header.innerHTML = headerHTML;
             content.innerHTML = contentHTML;
