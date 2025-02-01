@@ -70,7 +70,7 @@
                 const data = await response.json();
                 console.log("API Data:", data);
                 
-                const books = Array.isArray(data.books) ? data.books : data; // books 속성이 없을 경우 전체 데이터를 사용
+                const books = data.books || data; // books 속성이 없으면 전체 데이터를 사용
                 
                 if (!Array.isArray(books)) {
                     throw new Error("도서 목록을 불러올 수 없습니다.");
@@ -85,7 +85,7 @@
                 const tableBody = document.getElementById('book-list');
                 tableBody.innerHTML = '';
                 
-                filteredBooks.forEach(book => {
+                filteredBooks.slice(0, limit).forEach(book => {
                     const row = `<tr>
                         <td>${book.ID || ''}</td>
                         <td>${book.ISBN || ''}</td>
