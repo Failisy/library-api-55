@@ -5,22 +5,29 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>ISBN</th>
                 <th>제목</th>
                 <th>저자</th>
                 <th>출판사</th>
-                <th>ISBN</th>
+                <th>부가기호</th>
+                <th>가격</th>
+                <th>쪽수</th>
+                <th>크기</th>
+                <th>출판일</th>
+                <th>분류기호</th>
                 <th>대출 가능 여부</th>
             </tr>
         </thead>
-        <tbody id="book-list"></tbody> <!-- ✅ 필수 요소 추가 -->
+        <tbody id="book-list"></tbody> <!-- 도서 목록을 여기서 업데이트 -->
     </table>
 
-    <!-- 페이지네이션 버튼 추가 -->
-    <div id="pagination-buttons">
+    <!-- 페이지네이션 버튼 -->
+    <div id="pagination">
         <button id="prev-page" onclick="goToPrevPage()">이전</button>
         <button id="next-page" onclick="goToNextPage()">다음</button>
     </div>
 </section>
+
 
 <section id="manage">
     <h2>도서 관리 (관리자 전용)</h2>
