@@ -17,12 +17,15 @@
         th {
             background-color: #f2f2f2;
         }
+        .pagination {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>도서 목록</h1>
     <input type="text" id="search" placeholder="검색어 입력 (제목, 저자, 출판사 등)">
-    <button onclick="fetchBooks()">검색</button>
+    <button onclick="fetchBooks(1)">검색</button>
     <p id="error-message" style="color: red;"></p>
     <table>
         <thead>
@@ -37,22 +40,28 @@
         </thead>
         <tbody id="book-list"></tbody>
     </table>
+    <div class="pagination">
+        <button onclick="changePage(-1)">이전</button>
+        <span id="page-info"></span>
+        <button onclick="changePage(1)">다음</button>
+    </div>
     
     <script>
-        async function fetchBooks() {
-            try {
-                const response = await fetch('https://army-library55.wofyf789.workers.dev/books');
-                const books = await response.json();
-                
-                console.log("API 응답:", books); // 디버깅용 로그
+        let currentPage = 1;
+        const limit = 20;
 
-                if (!Array.isArray(books)) {
-                    document.getElementById("error-message").innerText = "도서 목록을 불러오는 데 실패했습니다: " + (books.error || "알 수 없는 오류");
+        async function fetchBooks(page) {
+            try {
+                const searchQuery = document.getElementById('search').value.toLowerCase();
+                const response = await fetch(`https://army-library55.wofyf789.workers.dev/books?page=${page}&limit=${limit}`);
+                const data = await response.json();
+                
+                if (!Array.isArray(data.books)) {
+                    document.getElementById("error-message").innerText = "도서 목록을 불러오는 데 실패했습니다: " + (data.error || "알 수 없는 오류");
                     return;
                 }
-
-                const searchQuery = document.getElementById('search').value.toLowerCase();
-                const filteredBooks = books.filter(book =>
+                
+                const filteredBooks = data.books.filter(book =>
                     book['책 제목'].toLowerCase().includes(searchQuery) ||
                     book['저자'].toLowerCase().includes(searchQuery) ||
                     book['출판사'].toLowerCase().includes(searchQuery)
@@ -68,18 +77,28 @@
                         <td>${book['책 제목']}</td>
                         <td>${book.저자}</td>
                         <td>${book.출판사}</td>
-                        <td>${book['대출 가능 여부']}</td>
+                        <td>${book['대출가능']}</td>
                     </tr>`;
                     tableBody.innerHTML += row;
                 });
+                
+                currentPage = data.page;
+                document.getElementById('page-info').innerText = `페이지 ${currentPage} / 총 ${Math.ceil(data.total / limit)}`;
             } catch (error) {
                 document.getElementById("error-message").innerText = "데이터를 가져오는 중 오류 발생: " + error.message;
                 console.error("Fetch error:", error);
             }
         }
         
+        function changePage(direction) {
+            const newPage = currentPage + direction;
+            if (newPage > 0) {
+                fetchBooks(newPage);
+            }
+        }
+        
         // 페이지 로드 시 도서 목록 불러오기
-        fetchBooks();
+        fetchBooks(1);
     </script>
 </body>
 </html>
