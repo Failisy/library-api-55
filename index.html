@@ -45,50 +45,85 @@
                     <!-- 검색 결과 출력 -->
                 </tbody>
             </table>
+            <div id="pagination">
+                <button id="prevPage">이전</button>
+                <span id="pageInfo"></span>
+                <button id="nextPage">다음</button>
+            </div>
         </section>
     </main>
     
     <script>
-        async function fetchBooks() {
-            const response = await fetch('https://army-library55.wofyf789.workers.dev/books');
-            const books = await response.json();
-            displayBooks(books);
+        let booksData = [];
+        let currentPage = 1;
+        const rowsPerPage = 10;
+
+        async function fetchBooks(page = 1) {
+            try {
+                const response = await fetch(`https://army-library55.wofyf789.workers.dev/books?page=${page}&limit=${rowsPerPage}`);
+                if (!response.ok) {
+                    throw new Error('네트워크 응답이 올바르지 않습니다.');
+                }
+                const data = await response.json();
+                booksData = data.books;
+                console.log("불러온 도서 데이터:", booksData);
+                displayBooks(data.total, data.page);
+            } catch (error) {
+                console.error("도서 데이터를 불러오는 중 오류 발생:", error);
+            }
         }
-        
-        function displayBooks(books) {
+
+        function displayBooks(totalBooks, page) {
             const tbody = document.querySelector('#booksTable tbody');
             tbody.innerHTML = '';
-            books.forEach(book => {
+
+            booksData.forEach(book => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${book.ID}</td>
-                    <td>${book.ISBN}</td>
-                    <td>${book.TITLE}</td>
-                    <td>${book.AUTHOR}</td>
-                    <td>${book.PUBLUSHER}</td>
-                    <td>${book.ADD_CODE}</td>
-                    <td>${book.PRE_PRICE}</td>
-                    <td>${book.PAGE}</td>
-                    <td>${book.SIZE}</td>
-                    <td>${book.PUBLISH_PREDATE}</td>
-                    <td>${book.SUBJECT}</td>
-                    <td>${book.LOAN}</td>
+                    <td>${book.ID || '-'}</td>
+                    <td>${book.ISBN || '-'}</td>
+                    <td>${book.TITLE || '-'}</td>
+                    <td>${book.AUTHOR || '-'}</td>
+                    <td>${book.PUBLISHER || '-'}</td>
+                    <td>${book.ADD_CODE || '-'}</td>
+                    <td>${book.PRE_PRICE || '-'}</td>
+                    <td>${book.PAGE || '-'}</td>
+                    <td>${book.SIZE || '-'}</td>
+                    <td>${book.PUBLISH_DATE || '-'}</td>
+                    <td>${book.SUBJECT || '-'}</td>
+                    <td>${book.LOAN || '-'}</td>
                 `;
                 tbody.appendChild(row);
             });
+            
+            document.getElementById('pageInfo').textContent = `페이지 ${page} / ${Math.ceil(totalBooks / rowsPerPage)}`;
         }
-        
+
         function searchBook() {
             const query = document.getElementById('searchBox').value.toLowerCase();
-            fetchBooks().then(() => {
-                const rows = document.querySelectorAll('#booksTable tbody tr');
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(query) ? '' : 'none';
-                });
+            fetchBooks(1).then(() => {
+                booksData = booksData.filter(book => 
+                    (book.TITLE && book.TITLE.toLowerCase().includes(query)) ||
+                    (book.AUTHOR && book.AUTHOR.toLowerCase().includes(query)) ||
+                    (book.ISBN && book.ISBN.toLowerCase().includes(query))
+                );
+                displayBooks(booksData.length, 1);
             });
         }
-        
+
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchBooks(currentPage);
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            fetchBooks(currentPage + 1).then(() => {
+                currentPage++;
+            });
+        });
+
         fetchBooks();
     </script>
 </body>
