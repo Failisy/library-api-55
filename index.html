@@ -81,7 +81,7 @@
             border: none;
             cursor: pointer;
         }
-        #search {
+        #search, #booksTable {
             display: none;
         }
     </style>
@@ -170,18 +170,18 @@
             filteredBooks.forEach(book => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${book.ID || '-'}</td>
-                    <td>${book.ISBN || '-'}</td>
-                    <td>${book.TITLE || '-'}</td>
-                    <td>${book.AUTHOR || '-'}</td>
-                    <td>${book.PUBLISHER || '-'}</td>
-                    <td>${book.ADD_CODE || '-'}</td>
-                    <td>${book.PRE_PRICE || '-'}</td>
-                    <td>${book.PAGE || '-'}</td>
-                    <td>${book.SIZE || '-'}</td>
-                    <td>${book.PUBLISH_DATE || '-'}</td>
-                    <td>${book.SUBJECT || '-'}</td>
-                    <td>${book.LOAN || '-'}</td>
+                    <td>${book.ID || '-'} </td>
+                    <td>${book.ISBN || '-'} </td>
+                    <td>${book.TITLE || '-'} </td>
+                    <td>${book.AUTHOR || '-'} </td>
+                    <td>${book.PUBLISHER || '-'} </td>
+                    <td>${book.ADD_CODE || '-'} </td>
+                    <td>${book.PRE_PRICE || '-'} </td>
+                    <td>${book.PAGE || '-'} </td>
+                    <td>${book.SIZE || '-'} </td>
+                    <td>${book.PUBLISH_DATE || '-'} </td>
+                    <td>${book.SUBJECT || '-'} </td>
+                    <td>${book.LOAN || '-'} </td>
                 `;
                 tbody.appendChild(row);
             });
@@ -191,9 +191,11 @@
             const user = JSON.parse(localStorage.getItem('user'));
             if (user) {
                 document.getElementById('search').style.display = 'block';
+                document.getElementById('booksTable').style.display = 'table';
                 fetchBooks();
             } else {
                 document.getElementById('search').style.display = 'none';
+                document.getElementById('booksTable').style.display = 'none';
             }
         }
 
