@@ -113,6 +113,7 @@
     
     <script>
         let booksData = [];
+        let filteredBooks = [];
         let currentPage = 1;
         const rowsPerPage = 10;
 
@@ -124,7 +125,7 @@
                 }
                 const data = await response.json();
                 booksData = data.books;
-                console.log("불러온 도서 데이터:", booksData);
+                filteredBooks = booksData; // 전체 데이터로 초기화
                 displayBooks(data.total, data.page);
             } catch (error) {
                 console.error("도서 데이터를 불러오는 중 오류 발생:", error);
@@ -134,8 +135,10 @@
         function displayBooks(totalBooks, page) {
             const tbody = document.querySelector('#booksTable tbody');
             tbody.innerHTML = '';
+            const start = (page - 1) * rowsPerPage;
+            const paginatedBooks = filteredBooks.slice(start, start + rowsPerPage);
 
-            booksData.forEach(book => {
+            paginatedBooks.forEach(book => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${book.ID || '-'}</td>
@@ -154,32 +157,32 @@
                 tbody.appendChild(row);
             });
             
-            document.getElementById('pageInfo').textContent = `페이지 ${page} / ${Math.ceil(totalBooks / rowsPerPage)}`;
+            document.getElementById('pageInfo').textContent = `페이지 ${page} / ${Math.ceil(filteredBooks.length / rowsPerPage)}`;
         }
 
         function searchBook() {
             const query = document.getElementById('searchBox').value.toLowerCase();
-            fetchBooks(1).then(() => {
-                booksData = booksData.filter(book => 
-                    (book.TITLE && book.TITLE.toLowerCase().includes(query)) ||
-                    (book.AUTHOR && book.AUTHOR.toLowerCase().includes(query)) ||
-                    (book.ISBN && book.ISBN.toLowerCase().includes(query))
-                );
-                displayBooks(booksData.length, 1);
-            });
+            filteredBooks = booksData.filter(book =>
+                Object.values(book).some(value =>
+                    value && value.toString().toLowerCase().includes(query)
+                )
+            );
+            currentPage = 1;
+            displayBooks(filteredBooks.length, 1);
         }
 
         document.getElementById('prevPage').addEventListener('click', () => {
             if (currentPage > 1) {
                 currentPage--;
-                fetchBooks(currentPage);
+                displayBooks(filteredBooks.length, currentPage);
             }
         });
 
         document.getElementById('nextPage').addEventListener('click', () => {
-            fetchBooks(currentPage + 1).then(() => {
+            if (currentPage < Math.ceil(filteredBooks.length / rowsPerPage)) {
                 currentPage++;
-            });
+                displayBooks(filteredBooks.length, currentPage);
+            }
         });
 
         fetchBooks();
