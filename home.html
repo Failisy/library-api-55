@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 관리 시스템</title>
-    <link rel="stylesheet" href="/library-api-55/css/styles.css">
+    <!-- CSS 경로 수정 -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div id="header"></div>
@@ -17,10 +18,16 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>ISBN</th>
                     <th>제목</th>
                     <th>저자</th>
                     <th>출판사</th>
-                    <th>ISBN</th>
+                    <th>부가기호</th>
+                    <th>가격</th>
+                    <th>쪽수</th>
+                    <th>크기</th>
+                    <th>출판일</th>
+                    <th>분류기호</th>
                     <th>대출 가능 여부</th>
                 </tr>
             </thead>
@@ -45,7 +52,8 @@
         </form>
     </section>
 
-    <!-- 스크립트 파일들 -->
+    <!-- 스크립트 파일들 경로 수정 -->
+    <script src="js/loadContent.js"></script>
     <script src="js/listBooks.js"></script>
     <script src="js/searchBooks.js"></script>
     <script src="js/borrowBook.js"></script>
