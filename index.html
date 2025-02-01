@@ -137,17 +137,25 @@
                     <!-- 검색 결과 출력 -->
                 </tbody>
             </table>
-            <div id="pagination">
-                <button id="prevPage" onclick="changePage(-1)" disabled>이전</button>
-                <span id="pageInfo"></span>
-                <button id="nextPage" onclick="changePage(1)" disabled>다음</button>
-            </div>
         </section>
     </main>
     
     <script>
+        let booksData = [];
+        let filteredBooks = [];
+
         function login() {
-            localStorage.setItem('user', JSON.stringify({ loggedIn: true }));
+            const unit = document.getElementById('unit').value;
+            const militaryID = document.getElementById('militaryID').value;
+            const rank = document.getElementById('rank').value;
+            const name = document.getElementById('name').value;
+            
+            if (!unit || !militaryID || !rank || !name) {
+                alert("모든 필드를 입력하세요.");
+                return;
+            }
+            
+            localStorage.setItem('user', JSON.stringify({ unit, militaryID, rank, name }));
             updateUI();
         }
 
