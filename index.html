@@ -70,11 +70,13 @@
                 const data = await response.json();
                 console.log("API Data:", data);
                 
-                if (!data.books || !Array.isArray(data.books)) {
+                const books = Array.isArray(data.books) ? data.books : data; // books 속성이 없을 경우 전체 데이터를 사용
+                
+                if (!Array.isArray(books)) {
                     throw new Error("도서 목록을 불러올 수 없습니다.");
                 }
                 
-                const filteredBooks = data.books.filter(book =>
+                const filteredBooks = books.filter(book =>
                     (book['책 제목'] && book['책 제목'].toLowerCase().includes(searchQuery)) ||
                     (book['저자'] && book['저자'].toLowerCase().includes(searchQuery)) ||
                     (book['출판사'] && book['출판사'].toLowerCase().includes(searchQuery))
@@ -95,8 +97,8 @@
                     tableBody.innerHTML += row;
                 });
                 
-                currentPage = data.page;
-                document.getElementById('page-info').innerText = `페이지 ${currentPage} / 총 ${Math.ceil(data.total / limit)}`;
+                currentPage = data.page || 1;
+                document.getElementById('page-info').innerText = `페이지 ${currentPage} / 총 ${Math.ceil((data.total || books.length) / limit)}`;
             } catch (error) {
                 document.getElementById("error-message").innerText = "오류 발생: " + error.message;
                 console.error("Fetch error:", error);
