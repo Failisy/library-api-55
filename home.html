@@ -1,39 +1,34 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 관리 시스템</title>
-    <link rel="stylesheet" href="/library-api-55/css/styles.css">
-</head>
-<body>
-    <div id="header"></div>
-    <div id="content"></div>
+<section id="books">
+    <h2>도서 목록</h2>
+    <input type="text" id="search" placeholder="도서 검색...">
+    <table id="book-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>제목</th>
+                <th>저자</th>
+                <th>출판사</th>
+                <th>ISBN</th>
+                <th>대출 가능 여부</th>
+            </tr>
+        </thead>
+        <tbody id="book-list"></tbody> <!-- 도서 목록을 여기서 업데이트 -->
+    </table>
 
-    <!-- Script to load the page content -->
-    <script>
-        async function loadPage() {
-            const header = document.getElementById("header");
-            const content = document.getElementById("content");
+    <!-- 페이지네이션 버튼 추가 -->
+    <div id="pagination">
+        <button id="prev-page" onclick="goToPrevPage()">이전</button>
+        <button id="next-page" onclick="goToNextPage()">다음</button>
+    </div>
+</section>
 
-            if (header && content) {
-                // Fetch header and content asynchronously
-                const [headerHTML, contentHTML] = await Promise.all([
-                    fetch("/library-api-55/partials/header.html").then(res => res.text()),
-                    fetch("/library-api-55/partials/home_content.html").then(res => res.text())
-                ]);
-                header.innerHTML = headerHTML;
-                content.innerHTML = contentHTML;
-            }
-            // After content loads, call fetchBooks
-            setTimeout(fetchBooks, 500); // Giving some delay to ensure all content is loaded
-        }
-
-        // Load the page
-        loadPage();
-    </script>
-
-    <!-- The script.js should be included after loading the content -->
-    <script src="js/script.js" defer></script>
-</body>
-</html>
+<section id="manage">
+    <h2>도서 관리 (관리자 전용)</h2>
+    <form id="add-book-form">
+        <input type="text" id="book-title" placeholder="도서 제목" required>
+        <input type="text" id="book-author" placeholder="저자" required>
+        <input type="text" id="book-publisher" placeholder="출판사" required>
+        <input type="text" id="book-isbn" placeholder="ISBN" required>
+        <button type="submit">도서 추가</button>
+    </form>
+</section>
