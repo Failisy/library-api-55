@@ -162,11 +162,13 @@
 
         function searchBook() {
             const query = document.getElementById('searchBox').value.trim().toLowerCase();
+            console.log("검색어:", query);
             filteredBooks = booksData.filter(book =>
                 Object.values(book).some(value =>
                     value && value.toString().toLowerCase().includes(query)
                 )
             );
+            console.log("검색된 도서:", filteredBooks);
             currentPage = 1;
             displayBooks(filteredBooks.length, 1);
         }
