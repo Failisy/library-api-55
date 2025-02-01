@@ -12,7 +12,6 @@ async function fetchBooks(page = 1) {
             return;
         }
 
-        // 페이지와 항목 수를 쿼리 파라미터로 전달
         const response = await fetch(`${apiBase}books?page=${page}&limit=${itemsPerPage}`);
         if (!response.ok) {
             throw new Error("서버 응답 오류");
@@ -42,7 +41,6 @@ async function fetchBooks(page = 1) {
 
         // 페이지네이션 버튼 업데이트
         updatePagination(page);
-
     } catch (error) {
         console.error("❌ 도서 목록을 불러오는 중 오류 발생:", error);
     }
