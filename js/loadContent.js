@@ -12,8 +12,24 @@ async function loadContent() {
         content.innerHTML = contentHTML;  // 도서 목록과 관리 섹션 로드
     }
 
-    // 도서 목록 초기화
-    setTimeout(fetchBooks, 500);  // 페이지가 로드된 후 500ms 딜레이
+    // DOM이 완전히 로드된 후, 도서 목록을 불러옴
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('search');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value;
+                searchBooks(query);
+            });
+        }
+
+        const addBookForm = document.getElementById('add-book-form');
+        if (addBookForm) {
+            addBookForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                addBook();
+            });
+        }
+    });
 }
 
 loadContent();  // 콘텐츠 로드 실행
