@@ -1,20 +1,21 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 관리 시스템</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <div id="header"></div>
-    <div id="content"></div>
-    
-    <script>
-        document.getElementById("header").innerHTML = fetch("partials/header.html").then(res => res.text());
-        document.getElementById("content").innerHTML = fetch("partials/content.html").then(res => res.text());
-    </script>
-    
-    <script defer src="js/script.js"></script>
-</body>
-</html>
+<script>
+    async function loadPage() {
+        const header = document.getElementById("header");
+        const content = document.getElementById("content");
+        
+        if (header && content) {
+            const [headerHTML, contentHTML] = await Promise.all([
+                fetch("/library-api-55/partials/header.html").then(res => res.text()),
+                fetch("/library-api-55/partials/content.html").then(res => res.text())
+            ]);
+            header.innerHTML = headerHTML;
+            content.innerHTML = contentHTML;
+        }
+        
+        setTimeout(fetchBooks, 500); // ✅ 컨텐츠 로드 후 fetchBooks 실행
+    }
+
+    loadPage();
+</script>
+
+<script defer src="/library-api-55/js/script.js"></script>
