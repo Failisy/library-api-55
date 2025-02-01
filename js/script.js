@@ -12,7 +12,17 @@ async function fetchBooks() {
         if (!response.ok) {
             throw new Error("서버 응답 오류");
         }
-        const books = await response.json();
+        
+        const data = await response.json();
+        console.log(data); // ✅ API 응답 확인
+        
+        // books가 배열인지 확인
+        const books = Array.isArray(data) ? data : data.books; // 배열로 변환하거나 데이터 구조 처리
+        
+        // 배열이 아닌 경우 예외 처리
+        if (!Array.isArray(books)) {
+            throw new Error("도서 목록을 불러오는 중 오류 발생: books 데이터가 배열이 아닙니다.");
+        }
 
         tbody.innerHTML = "";
         books.forEach(book => {
