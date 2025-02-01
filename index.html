@@ -148,6 +148,8 @@
     <script>
         let booksData = [];
         let filteredBooks = [];
+        let currentPage = 1;
+        const rowsPerPage = 10;
 
         async function fetchBooks() {
             try {
@@ -167,7 +169,10 @@
         function displayBooks() {
             const tbody = document.querySelector('#booksTable tbody');
             tbody.innerHTML = '';
-            filteredBooks.forEach(book => {
+            const start = (currentPage - 1) * rowsPerPage;
+            const paginatedBooks = filteredBooks.slice(start, start + rowsPerPage);
+
+            paginatedBooks.forEach(book => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${book.ID || '-'} </td>
@@ -187,16 +192,14 @@
             });
         }
 
-        function updateUI() {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user) {
-                document.getElementById('search').style.display = 'block';
-                document.getElementById('booksTable').style.display = 'table';
-                fetchBooks();
-            } else {
-                document.getElementById('search').style.display = 'none';
-                document.getElementById('booksTable').style.display = 'none';
-            }
+        function searchBook() {
+            const query = document.getElementById('searchBox').value.trim().toLowerCase();
+            filteredBooks = booksData.filter(book =>
+                Object.values(book).some(value =>
+                    value && value.toString().toLowerCase().includes(query)
+                )
+            );
+            displayBooks();
         }
 
         updateUI();
