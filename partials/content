@@ -1,0 +1,28 @@
+<section id="books">
+    <h2>도서 목록</h2>
+    <input type="text" id="search" placeholder="도서 검색...">
+    <table id="book-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>제목</th>
+                <th>저자</th>
+                <th>출판사</th>
+                <th>ISBN</th>
+                <th>대출 가능 여부</th>
+            </tr>
+        </thead>
+        <tbody id="book-list"></tbody>
+    </table>
+</section>
+
+<section id="manage">
+    <h2>도서 관리 (관리자 전용)</h2>
+    <form id="add-book-form">
+        <input type="text" id="book-title" placeholder="도서 제목" required>
+        <input type="text" id="book-author" placeholder="저자" required>
+        <input type="text" id="book-publisher" placeholder="출판사" required>
+        <input type="text" id="book-isbn" placeholder="ISBN" required>
+        <button type="submit">도서 추가</button>
+    </form>
+</section>
