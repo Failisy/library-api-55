@@ -3,130 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 목록</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .pagination {
-            margin-top: 10px;
-        }
-        #error-message {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+    <title>55탄약 도서관</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>도서 목록</h1>
-    <input type="text" id="search" placeholder="검색어 입력 (제목, 저자, 출판사 등)">
-    <button onclick="fetchBooks(1)">검색</button>
-    <p id="error-message"></p>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>ISBN</th>
-                <th>책 제목</th>
-                <th>저자</th>
-                <th>출판사</th>
-                <th>가격</th>
-                <th>쪽수</th>
-                <th>출판일</th>
-                <th>대출 가능 여부</th>
-            </tr>
-        </thead>
-        <tbody id="book-list"></tbody>
-    </table>
-    <div class="pagination">
-        <button onclick="changePage(-1)">이전</button>
-        <span id="page-info"></span>
-        <button onclick="changePage(1)">다음</button>
-    </div>
+    <header>
+        <h1>55탄약 도서관</h1>
+        <nav>
+            <ul>
+                <li><a href="#">도서 검색</a></li>
+                <li><a href="#">대출</a></li>
+                <li><a href="#">반납</a></li>
+                <li><a href="#">관리</a></li>
+            </ul>
+        </nav>
+    </header>
     
-    <script>
-        let currentPage = 1;
-        const limit = 20;
-
-        async function fetchBooks(page) {
-            try {
-                const searchQuery = document.getElementById('search').value.toLowerCase();
-                document.getElementById("error-message").innerText = "";
-                console.log("Fetching books from API...");
-                
-                const response = await fetch(`https://army-library55.wofyf789.workers.dev/books?page=${page}&limit=${limit}`);
-                console.log("API Response Status:", response.status);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP 오류 발생: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log("API Data:", data);
-                
-                let books = [];
-                if (Array.isArray(data)) {
-                    books = data;
-                } else if (data.books && Array.isArray(data.books)) {
-                    books = data.books;
-                } else {
-                    throw new Error("도서 목록을 불러올 수 없습니다. API 응답 확인 필요.");
-                }
-                
-                if (books.length === 0) {
-                    throw new Error("도서 목록이 비어 있습니다.");
-                }
-                
-                const filteredBooks = books.filter(book =>
-                    (book["TITLE"] && book["TITLE"].toLowerCase().includes(searchQuery)) ||
-                    (book["AUTHOR"] && book["AUTHOR"].toLowerCase().includes(searchQuery)) ||
-                    (book["PUBLISHER"] && book["PUBLISHER"].toLowerCase().includes(searchQuery))
-                );
-                
-                const tableBody = document.getElementById('book-list');
-                tableBody.innerHTML = '';
-                
-                filteredBooks.forEach(book => {
-                    const row = `<tr>
-                        <td>${book.ID || ''}</td>
-                        <td>${book.ISBN || ''}</td>
-                        <td>${book["TITLE"] || ''}</td>
-                        <td>${book["AUTHOR"] || ''}</td>
-                        <td>${book["PUBLISHER"] || ''}</td>
-                        <td>${book["PRE_PRICE"] || ''}</td>
-                        <td>${book["PAGE"] || ''}</td>
-                        <td>${book["PUBLISH_PREDATE"] || ''}</td>
-                        <td>${book["LOAN"] || ''}</td>
-                    </tr>`;
-                    tableBody.innerHTML += row;
-                });
-                
-                currentPage = data.page || page;
-                document.getElementById('page-info').innerText = `페이지 ${currentPage} / 총 ${Math.ceil((data.total || books.length) / limit)}`;
-            } catch (error) {
-                document.getElementById("error-message").innerText = "오류 발생: " + error.message;
-                console.error("Fetch error:", error);
-            }
-        }
-        
-        function changePage(direction) {
-            const newPage = currentPage + direction;
-            if (newPage > 0) {
-                fetchBooks(newPage);
-            }
-        }
-        
-        // 페이지 로드 시 도서 목록 불러오기
-        fetchBooks(1);
-    </script>
+    <main>
+        <section id="search">
+            <h2>도서 검색</h2>
+            <input type="text" id="searchBox" placeholder="도서명, 저자, ISBN 검색">
+            <button onclick="searchBook()">검색</button>
+            <table id="booksTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ISBN</th>
+                        <th>제목</th>
+                        <th>저자</th>
+                        <th>출판사</th>
+                        <th>대출 가능 여부</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 검색 결과 출력 -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    
+    <script src="script.js"></script>
 </body>
 </html>
