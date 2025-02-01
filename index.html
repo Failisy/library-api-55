@@ -59,8 +59,9 @@
             color: white;
             cursor: pointer;
         }
-        #pagination button:hover {
-            background: #555;
+        #pagination button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -104,9 +105,9 @@
                 </tbody>
             </table>
             <div id="pagination">
-                <button id="prevPage">이전</button>
+                <button id="prevPage" onclick="changePage(-1)" disabled>이전</button>
                 <span id="pageInfo"></span>
-                <button id="nextPage">다음</button>
+                <button id="nextPage" onclick="changePage(1)" disabled>다음</button>
             </div>
         </section>
     </main>
@@ -156,7 +157,16 @@
                 `;
                 tbody.appendChild(row);
             });
-            document.getElementById('pageInfo').textContent = `페이지 ${page} / ${Math.ceil(filteredBooks.length / rowsPerPage)}`;
+            
+            const totalPages = Math.ceil(filteredBooks.length / rowsPerPage);
+            document.getElementById('pageInfo').textContent = `페이지 ${page} / ${totalPages}`;
+            document.getElementById('prevPage').disabled = page <= 1;
+            document.getElementById('nextPage').disabled = page >= totalPages;
+        }
+
+        function changePage(step) {
+            currentPage += step;
+            displayBooks(currentPage);
         }
 
         function searchBook() {
@@ -169,20 +179,6 @@
             currentPage = 1;
             displayBooks(1);
         }
-
-        document.getElementById('prevPage').addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                displayBooks(currentPage);
-            }
-        });
-
-        document.getElementById('nextPage').addEventListener('click', () => {
-            if (currentPage < Math.ceil(filteredBooks.length / rowsPerPage)) {
-                currentPage++;
-                displayBooks(currentPage);
-            }
-        });
 
         fetchBooks();
     </script>
