@@ -39,6 +39,9 @@
                 <th>책 제목</th>
                 <th>저자</th>
                 <th>출판사</th>
+                <th>가격</th>
+                <th>쪽수</th>
+                <th>출판일</th>
                 <th>대출 가능 여부</th>
             </tr>
         </thead>
@@ -76,9 +79,9 @@
                 
                 const books = data.books;
                 const filteredBooks = books.filter(book =>
-                    (book["제목"] && book["제목"].toLowerCase().includes(searchQuery)) ||
-                    (book["저자"] && book["저자"].toLowerCase().includes(searchQuery)) ||
-                    (book["출판사"] && book["출판사"].toLowerCase().includes(searchQuery))
+                    (book["TITLE"] && book["TITLE"].toLowerCase().includes(searchQuery)) ||
+                    (book["AUTHOR"] && book["AUTHOR"].toLowerCase().includes(searchQuery)) ||
+                    (book["PUBLISHER"] && book["PUBLISHER"].toLowerCase().includes(searchQuery))
                 );
                 
                 const tableBody = document.getElementById('book-list');
@@ -88,10 +91,13 @@
                     const row = `<tr>
                         <td>${book.ID || ''}</td>
                         <td>${book.ISBN || ''}</td>
-                        <td>${book["제목"] || ''}</td>
-                        <td>${book["저자"] || ''}</td>
-                        <td>${book["출판사"] || ''}</td>
-                        <td>${book["대출 가능 여부"] || ''}</td>
+                        <td>${book["TITLE"] || ''}</td>
+                        <td>${book["AUTHOR"] || ''}</td>
+                        <td>${book["PUBLISHER"] || ''}</td>
+                        <td>${book["PRE_PRICE"] || ''}</td>
+                        <td>${book["PAGE"] || ''}</td>
+                        <td>${book["PUBLISH_PREDATE"] || ''}</td>
+                        <td>${book["LOAN"] || ''}</td>
                     </tr>`;
                     tableBody.innerHTML += row;
                 });
