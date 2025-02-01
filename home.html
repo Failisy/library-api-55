@@ -4,55 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 관리 시스템</title>
-    <!-- CSS 경로 수정 -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div id="header"></div>
     <div id="content"></div>
 
-    <section id="books">
-        <h2>도서 목록</h2>
-        <input type="text" id="search" placeholder="도서 검색...">
-        <table id="book-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>ISBN</th>
-                    <th>제목</th>
-                    <th>저자</th>
-                    <th>출판사</th>
-                    <th>부가기호</th>
-                    <th>가격</th>
-                    <th>쪽수</th>
-                    <th>크기</th>
-                    <th>출판일</th>
-                    <th>분류기호</th>
-                    <th>대출 가능 여부</th>
-                </tr>
-            </thead>
-            <tbody id="book-list"></tbody> <!-- 도서 목록을 여기에 표시 -->
-        </table>
-
-        <!-- 페이지네이션 버튼 -->
-        <div id="pagination">
-            <button id="prev-page" onclick="goToPrevPage()">이전</button>
-            <button id="next-page" onclick="goToNextPage()">다음</button>
-        </div>
-    </section>
-
-    <section id="manage">
-        <h2>도서 관리 (관리자 전용)</h2>
-        <form id="add-book-form">
-            <input type="text" id="book-title" placeholder="도서 제목" required>
-            <input type="text" id="book-author" placeholder="저자" required>
-            <input type="text" id="book-publisher" placeholder="출판사" required>
-            <input type="text" id="book-isbn" placeholder="ISBN" required>
-            <button type="submit">도서 추가</button>
-        </form>
-    </section>
-
-    <!-- 스크립트 파일들 경로 수정 -->
+    <!-- 외부 콘텐츠 로딩 -->
     <script src="js/loadContent.js"></script>
     <script src="js/listBooks.js"></script>
     <script src="js/searchBooks.js"></script>
