@@ -6,7 +6,7 @@ async function loadContent() {
         // 헤더와 콘텐츠를 비동기적으로 로드
         const [headerHTML, contentHTML] = await Promise.all([
             fetch("partials/header.html").then(res => res.text()),  // 헤더 부분
-            fetch("home_content.html").then(res => res.text())     // 콘텐츠 부분
+            fetch("partials/home_content.html").then(res => res.text())     // 콘텐츠 부분
         ]);
         header.innerHTML = headerHTML;
         content.innerHTML = contentHTML;  // 도서 목록과 관리 섹션 로드
