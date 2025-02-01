@@ -70,35 +70,34 @@
                 const data = await response.json();
                 console.log("API Data:", data);
                 
-                const books = data.books || data; // books 속성이 없으면 전체 데이터를 사용
-                
-                if (!Array.isArray(books)) {
+                if (!data.books || !Array.isArray(data.books)) {
                     throw new Error("도서 목록을 불러올 수 없습니다.");
                 }
                 
+                const books = data.books;
                 const filteredBooks = books.filter(book =>
-                    (book['책 제목'] && book['책 제목'].toLowerCase().includes(searchQuery)) ||
-                    (book['저자'] && book['저자'].toLowerCase().includes(searchQuery)) ||
-                    (book['출판사'] && book['출판사'].toLowerCase().includes(searchQuery))
+                    (book["제목"] && book["제목"].toLowerCase().includes(searchQuery)) ||
+                    (book["저자"] && book["저자"].toLowerCase().includes(searchQuery)) ||
+                    (book["출판사"] && book["출판사"].toLowerCase().includes(searchQuery))
                 );
                 
                 const tableBody = document.getElementById('book-list');
                 tableBody.innerHTML = '';
                 
-                filteredBooks.slice(0, limit).forEach(book => {
+                filteredBooks.forEach(book => {
                     const row = `<tr>
                         <td>${book.ID || ''}</td>
                         <td>${book.ISBN || ''}</td>
-                        <td>${book['책 제목'] || ''}</td>
-                        <td>${book.저자 || ''}</td>
-                        <td>${book.출판사 || ''}</td>
-                        <td>${book['대출가능'] || ''}</td>
+                        <td>${book["제목"] || ''}</td>
+                        <td>${book["저자"] || ''}</td>
+                        <td>${book["출판사"] || ''}</td>
+                        <td>${book["대출 가능 여부"] || ''}</td>
                     </tr>`;
                     tableBody.innerHTML += row;
                 });
                 
-                currentPage = data.page || 1;
-                document.getElementById('page-info').innerText = `페이지 ${currentPage} / 총 ${Math.ceil((data.total || books.length) / limit)}`;
+                currentPage = data.page || page;
+                document.getElementById('page-info').innerText = `페이지 ${currentPage} / 총 ${Math.ceil(data.total / limit)}`;
             } catch (error) {
                 document.getElementById("error-message").innerText = "오류 발생: " + error.message;
                 console.error("Fetch error:", error);
