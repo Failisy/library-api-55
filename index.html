@@ -147,6 +147,7 @@
     
     <script>
         let booksData = [];
+        let filteredBooks = [];
 
         async function fetchBooks() {
             try {
@@ -156,6 +157,7 @@
                 }
                 const data = await response.json();
                 booksData = data.books;
+                filteredBooks = booksData;
                 displayBooks();
             } catch (error) {
                 console.error("도서 데이터를 불러오는 중 오류 발생:", error);
@@ -165,8 +167,7 @@
         function displayBooks() {
             const tbody = document.querySelector('#booksTable tbody');
             tbody.innerHTML = '';
-
-            booksData.forEach(book => {
+            filteredBooks.forEach(book => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${book.ID || '-'}</td>
@@ -184,6 +185,16 @@
                 `;
                 tbody.appendChild(row);
             });
+        }
+
+        function searchBook() {
+            const query = document.getElementById('searchBox').value.trim().toLowerCase();
+            filteredBooks = booksData.filter(book =>
+                Object.values(book).some(value =>
+                    value && value.toString().toLowerCase().includes(query)
+                )
+            );
+            displayBooks();
         }
 
         function updateUI() {
