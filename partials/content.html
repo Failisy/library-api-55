@@ -1,28 +1,51 @@
-<section id="books">
-    <h2>도서 목록</h2>
-    <input type="text" id="search" placeholder="도서 검색...">
-    <table id="book-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>제목</th>
-                <th>저자</th>
-                <th>출판사</th>
-                <th>ISBN</th>
-                <th>대출 가능 여부</th>
-            </tr>
-        </thead>
-        <tbody id="book-list"></tbody>
-    </table>
-</section>
+const apiBase = "https://army-library55.wofyf789.workers.dev/";
 
-<section id="manage">
-    <h2>도서 관리 (관리자 전용)</h2>
-    <form id="add-book-form">
-        <input type="text" id="book-title" placeholder="도서 제목" required>
-        <input type="text" id="book-author" placeholder="저자" required>
-        <input type="text" id="book-publisher" placeholder="출판사" required>
-        <input type="text" id="book-isbn" placeholder="ISBN" required>
-        <button type="submit">도서 추가</button>
-    </form>
-</section>
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        await loadContent();
+        fetchBooks();
+    } catch (error) {
+        console.error("페이지 로드 중 오류 발생:", error);
+    }
+});
+
+async function loadContent() {
+    const header = document.getElementById("header");
+    const content = document.getElementById("content");
+    if (header && content) {
+        header.innerHTML = await (await fetch("/library-api-55/partials/header.html")).text();
+        content.innerHTML = await (await fetch("/library-api-55/partials/content.html")).text();
+    }
+}
+
+async function fetchBooks() {
+    try {
+        await new Promise(resolve => setTimeout(resolve, 500)); // Ensure content is loaded
+        const tbody = document.getElementById("book-list");
+        if (!tbody) {
+            console.error("도서 목록을 표시할 요소를 찾을 수 없습니다.");
+            return;
+        }
+
+        const response = await fetch(apiBase + "books");
+        if (!response.ok) {
+            throw new Error("서버 응답 오류");
+        }
+        const books = await response.json();
+
+        tbody.innerHTML = "";
+        books.forEach(book => {
+            const row = `<tr>
+                <td>${book.ID}</td>
+                <td>${book.제목}</td>
+                <td>${book.저자}</td>
+                <td>${book.출판사}</td>
+                <td>${book.ISBN}</td>
+                <td>${book.대출_가능_여부}</td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
+    } catch (error) {
+        console.error("도서 목록을 불러오는 중 오류 발생:", error);
+    }
+}
