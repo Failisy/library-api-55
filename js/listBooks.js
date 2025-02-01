@@ -22,7 +22,7 @@ async function fetchBooks(page = 1) {
         console.log(data); // 응답 데이터 확인
 
         const books = Array.isArray(data) ? data : data.books; // 응답 형식에 맞게 배열 처리
-        totalPages = data.totalPages; // API 응답에서 총 페이지 수를 가져옴
+        totalPages = data.totalPages || 1; // 응답에 totalPages가 없으면 기본값 설정
 
         tbody.innerHTML = ""; // 테이블 초기화
         books.forEach(book => {
