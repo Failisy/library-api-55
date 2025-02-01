@@ -1,12 +1,10 @@
-<script defer src="/library-api-55/js/script.js"></script> <!-- ✅ script.js를 먼저 로드 -->
-
 <script>
     async function loadPage() {
         await fetchContent(); // ✅ 컨텐츠를 먼저 로드
         if (typeof fetchBooks === "function") {
             setTimeout(fetchBooks, 500); // ✅ fetchBooks 실행
         } else {
-            console.error("fetchBooks 함수가 로드되지 않았습니다.");
+            console.error("❌ fetchBooks 함수가 로드되지 않았습니다. script.js 경로를 확인하세요.");
         }
     }
 
@@ -26,3 +24,6 @@
 
     loadPage();
 </script>
+
+<!-- ✅ script.js를 비동기 로드하도록 변경 -->
+<script src="/library-api-55/js/script.js" onload="fetchBooks();"></script>
