@@ -3,17 +3,17 @@ async function loadContent() {
     const content = document.getElementById("content");
 
     if (header && content) {
-        // Fetch header and content asynchronously
+        // 헤더와 콘텐츠를 비동기적으로 로드
         const [headerHTML, contentHTML] = await Promise.all([
-            fetch("/library-api-55/partials/header.html").then(res => res.text()),
-            fetch("/library-api-55/partials/home_content.html").then(res => res.text())
+            fetch("partials/header.html").then(res => res.text()),  // 헤더 부분
+            fetch("home_content.html").then(res => res.text())     // 콘텐츠 부분
         ]);
         header.innerHTML = headerHTML;
-        content.innerHTML = contentHTML;
+        content.innerHTML = contentHTML;  // 도서 목록과 관리 섹션 로드
     }
 
-    // Initialize the books list on content load
-    setTimeout(fetchBooks, 500); // Giving some delay to ensure content is loaded
+    // 도서 목록 초기화
+    setTimeout(fetchBooks, 500);  // 페이지가 로드된 후 500ms 딜레이
 }
 
-loadContent();
+loadContent();  // 콘텐츠 로드 실행
