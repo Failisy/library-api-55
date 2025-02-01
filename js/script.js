@@ -1,7 +1,11 @@
 const apiBase = "https://army-library55.wofyf789.workers.dev/";
 
 document.addEventListener("DOMContentLoaded", () => {
-    fetchBooks();
+    if (document.getElementById("book-list")) {
+        fetchBooks();
+    } else {
+        console.error("도서 목록 요소를 찾을 수 없습니다.");
+    }
 });
 
 async function fetchBooks() {
@@ -13,6 +17,10 @@ async function fetchBooks() {
         const books = await response.json();
         
         const tbody = document.getElementById("book-list");
+        if (!tbody) {
+            console.error("도서 목록을 표시할 요소를 찾을 수 없습니다.");
+            return;
+        }
         tbody.innerHTML = "";
         books.forEach(book => {
             const row = `<tr>
