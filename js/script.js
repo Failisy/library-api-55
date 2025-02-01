@@ -4,7 +4,7 @@ async function fetchBooks() {
     try {
         const tbody = document.getElementById("book-list");
         if (!tbody) {
-            console.error("도서 목록을 표시할 요소를 찾을 수 없습니다.");
+            console.error("❌ 도서 목록을 표시할 요소를 찾을 수 없습니다.");
             return;
         }
 
@@ -27,18 +27,7 @@ async function fetchBooks() {
             tbody.innerHTML += row;
         });
     } catch (error) {
-        console.error("도서 목록을 불러오는 중 오류 발생:", error);
+        console.error("❌ 도서 목록을 불러오는 중 오류 발생:", error);
     }
 }
-async function loadContent() {
-    const header = document.getElementById("header");
-    const content = document.getElementById("content");
-    if (header && content) {
-        const [headerHTML, contentHTML] = await Promise.all([
-            fetch("/library-api-55/partials/header.html").then(res => res.text()),
-            fetch("/library-api-55/partials/content.html").then(res => res.text())
-        ]);
-        header.innerHTML = headerHTML;
-        content.innerHTML = contentHTML;
-    }
-}
+
