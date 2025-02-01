@@ -1,29 +1,39 @@
-<script>
-    async function loadPage() {
-        await fetchContent(); // ✅ 컨텐츠를 먼저 로드
-        if (typeof fetchBooks === "function") {
-            setTimeout(fetchBooks, 500); // ✅ fetchBooks 실행
-        } else {
-            console.error("❌ fetchBooks 함수가 로드되지 않았습니다. script.js 경로를 확인하세요.");
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 관리 시스템</title>
+    <link rel="stylesheet" href="/library-api-55/css/styles.css">
+</head>
+<body>
+    <div id="header"></div>
+    <div id="content"></div>
+
+    <!-- Script to load the page content -->
+    <script>
+        async function loadPage() {
+            const header = document.getElementById("header");
+            const content = document.getElementById("content");
+
+            if (header && content) {
+                // Fetch header and content asynchronously
+                const [headerHTML, contentHTML] = await Promise.all([
+                    fetch("/library-api-55/partials/header.html").then(res => res.text()),
+                    fetch("/library-api-55/partials/home_content.html").then(res => res.text())
+                ]);
+                header.innerHTML = headerHTML;
+                content.innerHTML = contentHTML;
+            }
+            // After content loads, call fetchBooks
+            setTimeout(fetchBooks, 500); // Giving some delay to ensure all content is loaded
         }
-    }
 
-    async function fetchContent() {
-        const header = document.getElementById("header");
-        const content = document.getElementById("content");
-        
-        if (header && content) {
-            const [headerHTML, contentHTML] = await Promise.all([
-                fetch("/library-api-55/partials/header.html").then(res => res.text()),
-                fetch("/library-api-55/partials/home_content.html").then(res => res.text())
-            ]);
-            header.innerHTML = headerHTML;
-            content.innerHTML = contentHTML;
-        }
-    }
+        // Load the page
+        loadPage();
+    </script>
 
-    loadPage();
-</script>
-
-<!-- ✅ script.js를 올바르게 로드하도록 수정 -->
-<script src="js/script.js"></script>
+    <!-- The script.js should be included after loading the content -->
+    <script src="/library-api-55/js/script.js" defer></script>
+</body>
+</html>
