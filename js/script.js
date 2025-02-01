@@ -1,4 +1,4 @@
-const apiBase = "https://army-library55.wofyf789.workers.dev/";
+const apiBase = "https://army-library55.wofyf789.workers.dev";
 
 async function fetchBooks() {
     try {
