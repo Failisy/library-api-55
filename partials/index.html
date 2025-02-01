@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 관리 시스템</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>도서 관리 시스템</h1>
+        <nav>
+            <ul>
+                <li><a href="#login">로그인</a></li>
+                <li><a href="#books">도서 목록</a></li>
+                <li><a href="#manage">관리</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section id="login">
+        <h2>로그인</h2>
+        <form id="login-form">
+            <input type="text" id="unit" placeholder="부대" required>
+            <input type="text" id="militaryId" placeholder="군번" required>
+            <input type="text" id="rank" placeholder="계급" required>
+            <input type="text" id="name" placeholder="성명" required>
+            <button type="submit">로그인</button>
+        </form>
+    </section>
+    
+    <section id="books">
+        <h2>도서 목록</h2>
+        <input type="text" id="search" placeholder="도서 검색...">
+        <table id="book-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>제목</th>
+                    <th>저자</th>
+                    <th>출판사</th>
+                    <th>ISBN</th>
+                    <th>대출 가능 여부</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+    
+    <section id="manage">
+        <h2>도서 관리 (관리자 전용)</h2>
+        <form id="add-book-form">
+            <input type="text" id="book-title" placeholder="도서 제목" required>
+            <input type="text" id="book-author" placeholder="저자" required>
+            <input type="text" id="book-publisher" placeholder="출판사" required>
+            <input type="text" id="book-isbn" placeholder="ISBN" required>
+            <button type="submit">도서 추가</button>
+        </form>
+    </section>
+    
+    <script src="script.js"></script>
+</body>
+</html>
