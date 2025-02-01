@@ -2,6 +2,7 @@ const apiBase = "https://army-library55.wofyf789.workers.dev/";
 
 let currentPage = 1;
 const itemsPerPage = 10; // 한 페이지에 표시할 도서 수
+let totalPages = 1; // 총 페이지 수 (초기값 설정)
 
 async function fetchBooks(page = 1) {
     try {
@@ -11,13 +12,17 @@ async function fetchBooks(page = 1) {
             return;
         }
 
+        // 페이지와 항목 수를 쿼리 파라미터로 전달
         const response = await fetch(`${apiBase}books?page=${page}&limit=${itemsPerPage}`);
         if (!response.ok) {
             throw new Error("서버 응답 오류");
         }
 
         const data = await response.json();
-        const books = Array.isArray(data) ? data : data.books;
+        console.log(data); // 응답 데이터 확인
+
+        const books = Array.isArray(data) ? data : data.books; // 응답 형식에 맞게 배열 처리
+        totalPages = data.totalPages; // API 응답에서 총 페이지 수를 가져옴
 
         tbody.innerHTML = ""; // 테이블 초기화
         books.forEach(book => {
