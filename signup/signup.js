@@ -6,8 +6,8 @@ document.getElementById('signup-form').addEventListener('submit', function (even
     const rank = document.getElementById('rank').value;
     const name = document.getElementById('name').value;
 
-    const sheetId = 'YOUR_SPREADSHEET_ID'; // 구글 스프레드시트 ID
-    const apiKey = 'YOUR_API_KEY'; // 구글 API 키
+    const sheetId = '1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow'; // 구글 스프레드시트 ID
+    const apiKey = 'AIzaSyBPu53tOzSynITOGZeoFTe1Q81DGDilAPc'; // 구글 API 키
 
     // 구글 Sheets API URL
     const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/회원가입!A1:D1:append?key=${apiKey}`;
