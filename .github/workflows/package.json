@@ -1,6 +1,0 @@
-{
-  "scripts": {
-    "build": "react-scripts build",  # React 프로젝트 예시 (빌드 명령어)
-    "deploy": "gh-pages -d build"    # 빌드된 내용을 GitHub Pages로 배포
-  }
-}
