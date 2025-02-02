@@ -21,10 +21,13 @@ jobs:
       - name: Install dependencies
         run: npm install
       
-      - name: Set API_KEY and SHEET_ID as environment variables
+      - name: Replace environment variables in HTML and JS
         run: |
-          echo "API_KEY=${{ secrets.API_KEY }}" >> $GITHUB_ENV
-          echo "SHEET_ID=${{ secrets.SHEET_ID }}" >> $GITHUB_ENV
+          # Replace {{API_KEY}} and {{SHEET_ID}} placeholders with actual values
+          sed -i 's|{{API_KEY}}|${{ secrets.API_KEY }}|' home/index.html
+          sed -i 's|{{SHEET_ID}}|${{ secrets.SHEET_ID }}|' home/index.html
+          sed -i 's|{{API_KEY}}|${{ secrets.API_KEY }}|' home/script.js
+          sed -i 's|{{SHEET_ID}}|${{ secrets.SHEET_ID }}|' home/script.js
 
       - name: Deploy to GitHub Pages
         run: |
