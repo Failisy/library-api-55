@@ -6,7 +6,7 @@ document.getElementById("login-form").addEventListener("submit", async function(
     const rank = document.getElementById("rank").value;
     const name = document.getElementById("name").value;
 
-    const response = await fetch("https://army-library55.wofyf789.workers.dev/login", {
+    const response = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ unit, militaryId, rank, name })
