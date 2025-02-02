@@ -1,0 +1,31 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 푸시될 때마다 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # GitHub Actions 환경에서 실행될 OS 설정
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2  # 리포지토리 코드를 체크아웃
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2  # Node.js 환경 설정
+        with:
+          node-version: '14'  # 사용할 Node.js 버전 설정
+
+      - name: Install dependencies
+        run: npm install  # 프로젝트의 의존성 설치
+
+      - name: Build the project
+        run: npm run build  # 프로젝트 빌드 (예: React 앱 빌드)
+
+      - name: Deploy to GitHub Pages
+        run: npm run deploy  # GitHub Pages에 배포
+        env:
+          SHEET_ID: ${{ secrets.SHEET_ID }}  # GitHub Secrets에서 환경 변수 사용
+          API_KEY: ${{ secrets.API_KEY }}    # GitHub Secrets에서 환경 변수 사용
