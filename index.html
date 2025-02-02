@@ -4,8 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 관리 시스템</title>
-    <meta http-equiv="refresh" content="0;url=login.html">
+    <script>
+        // 로그인 상태 확인 함수
+        function checkLogin() {
+            const user = localStorage.getItem('user');  // 로그인 정보 확인
+            if (user) {
+                // 로그인한 사용자가 있을 경우, 대시보드로 이동
+                window.location.href = "home/dashboard/index.html";
+            } else {
+                // 로그인하지 않은 사용자는 로그인 페이지로 리디렉션
+                window.location.href = "home/login.index.html";
+            }
+        }
+
+        // 페이지 로드 시 로그인 상태 확인
+        window.onload = checkLogin;
+    </script>
 </head>
 <body>
+    <!-- 로그인 상태에 따라 자동으로 리디렉션됨 -->
 </body>
 </html>
