@@ -1,6 +1,6 @@
 async function fetchBookList() {
-    const apiKey = "{{API_KEY}}"; // GitHub Actions에서 교체된 값
-    const sheetId = "{{SHEET_ID}}"; // GitHub Actions에서 교체된 값
+    const apiKey = "{{API_KEY}}";  // GitHub Actions에서 교체된 값
+    const sheetId = "{{SHEET_ID}}";  // GitHub Actions에서 교체된 값
 
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/books?key=${apiKey}`;
 
