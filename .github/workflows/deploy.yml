@@ -3,29 +3,35 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # main 브랜치에 푸시될 때마다 실행
+      - main  # 'main' 브랜치에 푸시될 때마다 실행
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # GitHub Actions 환경에서 실행될 OS 설정
-    
+    runs-on: ubuntu-latest  # GitHub Actions에서 사용할 환경
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2  # 리포지토리 코드를 체크아웃
+        uses: actions/checkout@v2  # 저장소 코드를 체크아웃
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2  # Node.js 환경 설정
+        uses: actions/setup-node@v2
         with:
-          node-version: '14'  # 사용할 Node.js 버전 설정
+          node-version: '14'  # Node.js 버전 설정
 
       - name: Install dependencies
-        run: npm install  # 프로젝트의 의존성 설치
+        run: npm install  # 의존성 설치
+
+      - name: Fetch data from API
+        run: |
+          echo "Fetching data from API"
+          curl -s "https://sheets.googleapis.com/v4/spreadsheets/${{ secrets.SHEET_ID }}/values/books?key=${{ secrets.API_KEY }}" > data.json
+          cat data.json  # API 응답을 확인하려면 이 줄을 활성화하세요
 
       - name: Build the project
-        run: npm run build  # 프로젝트 빌드 (예: React 앱 빌드)
+        run: npm run build  # 빌드 명령어 실행 (예: React 앱 빌드)
 
       - name: Deploy to GitHub Pages
-        run: npm run deploy  # GitHub Pages에 배포
+        run: npm run deploy  # 배포 명령어 실행
         env:
           SHEET_ID: ${{ secrets.SHEET_ID }}  # GitHub Secrets에서 환경 변수 사용
           API_KEY: ${{ secrets.API_KEY }}    # GitHub Secrets에서 환경 변수 사용
