@@ -25,5 +25,5 @@ jobs:
         run: npm run build && npm run deploy
 
       - name: Set up API keys as secrets
-        run: echo "API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> $GITHUB_ENV
+        run: echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> $GITHUB_ENV
         run: echo "SHEET_ID=${{ secrets.SHEET_ID }}" >> $GITHUB_ENV
