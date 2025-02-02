@@ -16,12 +16,13 @@ document.getElementById('login-form').addEventListener('submit', function (event
     };
 
     // Google Apps Script API 호출
-    fetch('https://script.google.com/macros/s/AKfycbxY42riSqMamZuhsYa7E-VzUlnTPyKFgd25caG_B5gl6M4M9pMiuUblwy3M4DNXTRLgjw/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbxY42riSqMamZuhsYa7E-VzUlnTPyKFgd25caG_B5gl6M4M9pMiuUblwy3M4DNXTRLgjwL/exec', {
         method: 'POST',
         body: JSON.stringify(loginData),
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        mode: 'cors' // CORS 모드 활성화
     })
     .then(response => response.text())
     .then(data => {
