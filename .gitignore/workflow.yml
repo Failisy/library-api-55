@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and deploy
+        run: npm run build && npm run deploy
+
+      - name: Set up API keys as secrets
+        run: echo "API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> $GITHUB_ENV
+        run: echo "SHEET_ID=${{ secrets.SHEET_ID }}" >> $GITHUB_ENV
