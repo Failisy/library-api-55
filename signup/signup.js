@@ -7,10 +7,10 @@ document.getElementById('signup-form').addEventListener('submit', function (even
     const name = document.getElementById('name').value;
 
     const sheetId = '1cdECKnvPoVWmvw36BDEp5JeIRHKXRaGHeaqqWWRB9Ow'; // 구글 스프레드시트 ID
-    const apiKey = 'AIzaSyBPu53tOzSynITOGZeoFTe1Q81DGDilAPc'; // 구글 API 키
+    const accessToken = '650457472463-viqrk2hltu9qv8tqk4b1sd96akp0f6bo.apps.googleusercontent.com'; // OAuth 2.0으로 획득한 액세스 토큰
 
     // 구글 Sheets API URL
-    const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/회원가입!A1:D1:append?key=${apiKey}`;
+    const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/회원가입!A1:D1:append`;
 
     // 추가할 데이터
     const newRow = {
@@ -23,7 +23,8 @@ document.getElementById('signup-form').addEventListener('submit', function (even
     fetch(apiUrl, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}` // 액세스 토큰 사용
         },
         body: JSON.stringify(newRow)
     })
