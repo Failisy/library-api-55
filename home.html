@@ -3,23 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://failisy.github.io; connect-src 'self' https://army-library55.wofyf789.workers.dev;">
-</head>
-    <title>도서 관리 시스템</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>도서 목록</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="header"></div>
-    <div id="content"></div>
-
-    <!-- 외부 콘텐츠 로딩 -->
-    <script src="js/loadContent.js"></script>
-    <script src="js/listBooks.js"></script>
-    <script src="js/searchBooks.js"></script>
-    <script src="js/borrowBook.js"></script>
-    <script src="js/returnBook.js"></script>
-    <script src="js/addBook.js"></script>
-    <script src="js/editBook.js"></script>
-    <script src="js/deleteBook.js"></script>
+    <header>
+        <h1>도서 목록</h1>
+    </header>
+    <main>
+        <table id="book-list">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>ISBN</th>
+                    <th>제목</th>
+                    <th>저자</th>
+                    <th>출판사</th>
+                    <th>대출 가능 여부</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 도서 목록이 여기에 표시됩니다 -->
+            </tbody>
+        </table>
+    </main>
+    <script src="script.js"></script>
 </body>
 </html>
