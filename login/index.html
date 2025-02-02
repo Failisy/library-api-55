@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>도서관 로그인</h2>
+        <form id="login-form">
+            <label for="unit">부대:</label>
+            <input type="text" id="unit" name="unit" required>
+
+            <label for="military-id">군번:</label>
+            <input type="text" id="military-id" name="military-id" required>
+
+            <label for="rank">계급:</label>
+            <input type="text" id="rank" name="rank" required>
+
+            <label for="name">성명:</label>
+            <input type="text" id="name" name="name" required>
+
+            <button type="submit">로그인</button>
+        </form>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>
